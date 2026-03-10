@@ -29,6 +29,7 @@
       background: radial-gradient(circle at 20% 5%, #25376a 0%, var(--bg) 50%);
       color: var(--text);
     }
+    @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
 
     .shell { max-width: 1080px; margin: 0 auto; padding: 16px 16px 48px; }
 
@@ -46,9 +47,10 @@
     .grid {
       display: grid;
       gap: 16px;
-      grid-template-columns: 1.1fr .9fr;
+      grid-template-columns: 1fr;
     }
-    @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+    .grid.review-open { grid-template-columns: 1.1fr .9fr; }
+    @media (max-width: 900px) { .grid, .grid.review-open { grid-template-columns: 1fr; } }
 
     .panel {
       background: linear-gradient(180deg, rgba(32,47,87,.9), rgba(18,26,48,.95));
@@ -183,6 +185,53 @@
       padding: 12px;
     }
     .success.show { display: block; }
+
+    .bill-receipt {
+      display: none;
+      margin-top: 12px;
+      border-radius: 12px;
+      padding: 12px;
+      background: rgba(124, 77, 255, .12);
+      border: 1px solid rgba(124, 77, 255, .35);
+    }
+    .bill-receipt.show { display: block; }
+    .bill-amount {
+      margin: 0 0 10px;
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #d9e2ff;
+    }
+    .bill-note { margin: 0 0 10px; color: var(--muted); font-size: .92rem; }
+    .bill-grid {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 12px;
+      align-items: center;
+    }
+    .bill-grid img {
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,.2);
+      width: 160px;
+      height: 160px;
+      object-fit: cover;
+    }
+    .map-view-link {
+      display: inline-block;
+      margin-top: 8px;
+      color: #8fd8ff;
+      text-decoration: none;
+      font-weight: 700;
+    }
+    .summary-box {
+      margin-top: 10px;
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 10px;
+      padding: 10px;
+      background: rgba(6,12,24,.4);
+    }
+    .summary-box h4 { margin: 0 0 8px; }
+    .summary-box .row { display: flex; justify-content: space-between; gap: 10px; margin: 4px 0; }
+    .hidden { display: none !important; }
   </style>
 </head>
 <body>
@@ -192,7 +241,7 @@
       <p>Daily menu • fresh home-style food • quick order with auto-location & payment options.</p>
     </section>
 
-    <div class="grid">
+    <div class="grid" id="pageGrid">
       <section class="panel">
         <div class="title-row"><h2>Customer & Daily Menu</h2><span>Today only</span></div>
 
@@ -200,6 +249,7 @@
           <div class="customer-form">
             <input id="name" type="text" placeholder="Customer full name" required />
             <input id="phone" type="tel" placeholder="Mobile number" required pattern="[0-9]{10}" />
+            <input id="email" type="email" placeholder="Customer email (for order copy)" required />
 
             <div class="location-wrap">
               <input id="mapLink" type="url" placeholder="Map link auto-filled from current device location" required />
@@ -219,15 +269,16 @@
           <div id="menuRoot"></div>
 
           <textarea id="notes" rows="3" placeholder="Special instructions (optional)"></textarea>
+
+          <button class="btn" id="reviewOrderBtn" type="button">Continue to Order & Payment</button>
         </form>
       </section>
 
-      <aside class="panel summary">
+      <aside class="panel summary hidden" id="paymentPanel">
         <div class="title-row"><h2>Order & Payment</h2><span id="itemCount">0 items</span></div>
         <p>Review your order before placing.</p>
         <div class="line"><span>Subtotal</span><strong id="subtotal">₹0</strong></div>
-        <div class="line"><span>Delivery</span><strong id="delivery">₹30</strong></div>
-        <div class="line"><span>Total</span><strong id="total">₹30</strong></div>
+                <div class="line"><span>Total</span><strong id="total">₹0</strong></div>
 
         <div class="pay">
           <h3 style="margin:0 0 8px">Payment</h3>
@@ -240,7 +291,7 @@
             <input id="budget" type="number" min="0" placeholder="Budget (optional)" />
           </div>
           <div class="ok" id="budgetMsg"></div>
-          <img alt="UPI QR" src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=upi%3A%2F%2Fpay%3Fpa%3D8838739815%2540ptaxis%26pn%3DKoumatha%26tn%3DFoodOrder" style="margin-top:8px;border-radius:8px;border:1px solid rgba(255,255,255,.2);"/>
+          <p class="bill-note">After you place order, QR code + full order summary will appear here.</p>
         </div>
 
         <div class="sticky-actions">
@@ -248,6 +299,19 @@
           <button class="btn" id="placeOrder" type="button">Place Order</button>
         </div>
         <div class="success" id="successMsg"></div>
+        <div class="bill-receipt" id="billReceipt">
+          <p class="bill-amount" id="billAmount">Bill Amount: ₹0</p>
+          <p class="bill-note">Scan QR to pay and review your submitted order details below.</p>
+          <div class="bill-grid">
+            <img alt="UPI QR" src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=upi%3A%2F%2Fpay%3Fpa%3D8838739815%2540ptaxis%26pn%3DKoumatha%26tn%3DFoodOrder" />
+            <div>
+              <div><strong>Payment:</strong> <span id="billPaymentMethod">UPI</span></div>
+              <div style="margin-top:6px"><strong>Delivery Location:</strong></div>
+              <a id="billMapLink" class="map-view-link" href="#" target="_blank" rel="noopener noreferrer">Open delivery map</a>
+            </div>
+          </div>
+          <div id="billOrderSummary" style="margin-top:10px"></div>
+        </div>
       </aside>
     </div>
   </div>
@@ -269,19 +333,39 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
     const MENU = {
-      "Breakfast": [
-        ["Idly", 10], ["Dosa", 20], ["Pongal", 50], ["Poori", 20], ["Vadai", 10]
+      "Quick Snacks": [
+        ["Bread Omelette", 40], ["Bajji", 10], ["Onion Bajji", 10], ["Potato Bajji", 10], ["Bread Bajji", 10], ["Samosa", 20]
       ],
-      "Lunch": [
-        ["Meals", 90], ["Chicken Biryani", 140], ["Veg Fried Rice", 90], ["Curd Rice", 60]
+      "Beverages": [
+        ["Tea", 10], ["Special Tea", 15], ["Black Tea", 8], ["Black Tea with Ginger", 10], ["Lemon Tea", 12], ["Green Tea", 12], ["Coffee", 15], ["Black Coffee", 10], ["Chukku Coffee", 12], ["Boost", 20], ["Horlicks", 15], ["Milk", 12], ["Ragi Malt", 12]
       ],
-      "Snacks": [
-        ["Samosa", 20], ["Onion Bajji", 10], ["Bread Omelette", 40], ["Tea", 10], ["Coffee", 15]
+      "Morning Menu (Veg)": [
+        ["Idly (1 piece)", 10], ["Dosa (1 piece)", 20], ["Gheepodidosa (1 piece)", 40], ["Poori (1 piece)", 20], ["Upma", 30], ["Chapathi (1 piece)", 20], ["Pongal Sambar", 50], ["Medhu Vadai", 10], ["Wheat Plain Noodles", 30], ["Wheat Egg Noodles", 40]
       ],
-      "Dinner": [
-        ["Chapathi", 20], ["Parotta", 25], ["Egg Kothu", 80], ["Veg Noodles", 90]
+      "Morning Menu (Non-Veg)": [
+        ["Chicken Gravy", 100], ["Egg Gravy", 70]
+      ],
+      "Lunch Veg Menu": [
+        ["Veg Meals", 100], ["Veg Pulao", 100], ["Soya chunks 65", 70], ["Cauliflower 65", 80], ["Panner 65(freshly home made)", 135], ["Panner 65 briyani", 150], ["Panner briyani", 140], ["Coconut Milk Veg Pulao", 100], ["Mushroom Biryani", 120], ["Paneer Biryani", 130], ["Soya Chunks Biryani", 100], ["Vegetable Dum Biryani", 100], ["Mushroom peper fry", 100], ["Bread Roasted veg Briyani", 130], ["Ghee Rice (Veg)", 100], ["Keerai poriyal", 30], ["Boiled rice", 20]
+      ],
+      "Lunch Sadam Items": [
+        ["All Sadam with appalam", 60], ["Coconut Rice", 70], ["Thayir Sadam with Poriyal", 70], ["Lemon Sadam with Poriyal", 70], ["Puthina Sadam with Poriyal", 70], ["Thakali Sadam with Poriyal", 70], ["Pulisadam with Poriyal", 70], ["Carrot Sadam with Poriyal", 70], ["Egg Gravy with Rice", 70], ["Beetroot Sadam with Poriyal", 70]
+      ],
+      "Lunch Non-Veg Menu": [
+        ["Prawn Gravy rice", 150], ["Non-Veg Meals", 100], ["Chicken Biryani", 150], ["Chicken 65 Biryani", 150], ["Mutton Biryani", 350], ["Chicken 65", 130], ["Egg Pepper Fry", 40], ["Egg Pulao", 110], ["Egg Biryani", 110], ["Chicken Pulao", 150], ["Chicken Rice", 120], ["Chicken Ghee Rice", 120], ["Chicken Curry Meals", 120], ["Fish Curry Meals", 120], ["Dry Fish thokku", 80]
+      ],
+      "Dinner Menu (Veg)": [
+        ["Chapathi", 20], ["Parotta", 20], ["Veg Kili Parotta", 60], ["Poori", 20], ["Dosa", 20], ["Veg Fried Rice", 100], ["Chicken Fried Rice", 110], ["Egg Fried Rice", 100], ["Paneer Butter Masala", 100]
+      ],
+      "Dinner Menu (Non-Veg)": [
+        ["Egg kili Parotta", 100], ["Chicken kili Parotta", 150], ["Egg Gravy", 50], ["Chicken Gravy", 100], ["Chicken Sukka", 130], ["Prawn Gravy", 130]
+      ],
+      "Healthy Items": [
+        ["Egg (Boiled/Omelette etc.)", 50], ["Pachapayiru Sundal", 50], ["Black Chickpeas", 50], ["White Chickpeas", 50], ["Red Kidney Beans (Rajma)", 50]
       ]
     };
+
+    const FORMSPREE_ENDPOINT = "https://formspree.io/f/your-form-id";
 
     const state = {
       selected: new Map(),
@@ -360,11 +444,9 @@
 
     function updateTotals() {
       const subtotal = [...state.selected.values()].reduce((sum, item) => sum + item.price * item.qty, 0);
-      const delivery = subtotal > 0 ? 30 : 0;
-      const total = subtotal + delivery;
+      const total = subtotal;
       document.getElementById('itemCount').textContent = `${state.selected.size} items`;
       document.getElementById('subtotal').textContent = `₹${subtotal}`;
-      document.getElementById('delivery').textContent = `₹${delivery}`;
       document.getElementById('total').textContent = `₹${total}`;
 
       const budget = Number(document.getElementById('budget').value || 0);
@@ -420,11 +502,13 @@
       const name = document.getElementById('name').value.trim();
       const phone = document.getElementById('phone').value.trim();
       const mapLink = document.getElementById('mapLink').value.trim();
+      const email = document.getElementById('email').value.trim();
       const error = document.getElementById('formError');
       error.textContent = '';
 
       if (!name) return 'Please enter your full name.';
       if (!/^\d{10}$/.test(phone)) return 'Please enter a valid 10-digit mobile number.';
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return 'Please enter a valid email address.';
       if (!mapLink) return 'Please click "Use Location" to auto-fill your current location.';
       if (state.selected.size === 0) return 'Please select at least one daily menu item.';
       return '';
@@ -433,7 +517,7 @@
     function orderSummaryText() {
       const totalText = document.getElementById('total').textContent;
       const items = [...state.selected.values()].map(i => `- ${i.name} x${i.qty} = ₹${i.qty * i.price}`).join('\n');
-      return `Koumatha Home Cloud Kitchen - Daily Menu\nName: ${document.getElementById('name').value.trim()}\nPhone: ${document.getElementById('phone').value.trim()}\nLocation: ${document.getElementById('mapLink').value.trim()}\nPayment: ${document.getElementById('paymentMethod').value}\n\nItems:\n${items}\n\n${totalText}`;
+      return `Koumatha Home Cloud Kitchen - Daily Menu\nName: ${document.getElementById('name').value.trim()}\nPhone: ${document.getElementById('phone').value.trim()}\nEmail: ${document.getElementById('email').value.trim()}\nLocation: ${document.getElementById('mapLink').value.trim()}\nPayment: ${document.getElementById('paymentMethod').value}\n\nItems:\n${items}\n\n${totalText}`;
     }
 
     function applyFilters() {
@@ -463,6 +547,45 @@
     }
 
     function closeMap() { document.getElementById('mapOverlay').classList.remove('show'); }
+
+
+    function getOrderItems() {
+      return [...state.selected.values()].map(i => ({ name: i.name, qty: i.qty, lineTotal: i.qty * i.price }));
+    }
+
+    function renderOrderSummaryHtml() {
+      const items = getOrderItems();
+      const rows = items.map(i => `<div class="row"><span>${i.name} x ${i.qty}</span><strong>₹${i.lineTotal}</strong></div>`).join('');
+      return `<div class="summary-box"><h4>Order Summary</h4>${rows}<div class="row" style="margin-top:8px;border-top:1px dashed rgba(255,255,255,.2);padding-top:6px"><span>Total</span><strong>${document.getElementById('total').textContent}</strong></div></div>`;
+    }
+
+    async function sendOrderToFormspree() {
+      if (!FORMSPREE_ENDPOINT || FORMSPREE_ENDPOINT.includes('your-form-id')) {
+        throw new Error('Formspree endpoint is not configured. Replace FORMSPREE_ENDPOINT with your real form URL.');
+      }
+      const payload = {
+        _subject: `New Koumatha Order - ${document.getElementById('name').value.trim()}`,
+        customer_name: document.getElementById('name').value.trim(),
+        customer_phone: document.getElementById('phone').value.trim(),
+        customer_email: document.getElementById('email').value.trim(),
+        _replyto: document.getElementById('email').value.trim(),
+        _template: 'table',
+        payment_method: document.getElementById('paymentMethod').value,
+        map_link: document.getElementById('mapLink').value.trim(),
+        total: document.getElementById('total').textContent,
+        notes: document.getElementById('notes').value.trim(),
+        order_items: getOrderItems().map(i => `${i.name} x${i.qty} = ₹${i.lineTotal}`).join('\n')
+      };
+
+      const res = await fetch(FORMSPREE_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      if (!res.ok) {
+        throw new Error('Failed to submit order to email service.');
+      }
+    }
 
     async function init() {
       buildMenu();
@@ -498,6 +621,19 @@
         closeMap();
       });
 
+
+      document.getElementById('reviewOrderBtn').addEventListener('click', () => {
+        const err = validateOrder();
+        if (err) {
+          document.getElementById('formError').textContent = err;
+          return;
+        }
+        updateTotals();
+        document.getElementById('paymentPanel').classList.remove('hidden');
+        document.getElementById('pageGrid').classList.add('review-open');
+        document.getElementById('paymentPanel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+
       document.getElementById('copySummary').addEventListener('click', async () => {
         try {
           await navigator.clipboard.writeText(orderSummaryText());
@@ -508,15 +644,33 @@
         }
       });
 
-      document.getElementById('placeOrder').addEventListener('click', () => {
+      document.getElementById('placeOrder').addEventListener('click', async () => {
         const err = validateOrder();
         if (err) {
           document.getElementById('formError').textContent = err;
           return;
         }
+
+        const paymentMethod = document.getElementById('paymentMethod').value;
+        const totalText = document.getElementById('total').textContent;
+        const mapLink = document.getElementById('mapLink').value.trim();
+
+        try {
+          await sendOrderToFormspree();
+        } catch (mailErr) {
+          document.getElementById('formError').textContent = mailErr.message;
+          return;
+        }
+
         const success = document.getElementById('successMsg');
         success.className = 'success show';
-        success.innerHTML = `✅ Order placed successfully. Please complete payment using <strong>${document.getElementById('paymentMethod').value}</strong>.`;
+        success.innerHTML = `✅ Order placed and sent to kitchen email from your submitted details. Please complete payment using <strong>${paymentMethod}</strong>.`;
+
+        document.getElementById('billAmount').textContent = `Bill Amount: ${totalText}`;
+        document.getElementById('billPaymentMethod').textContent = paymentMethod;
+        document.getElementById('billMapLink').href = mapLink;
+        document.getElementById('billOrderSummary').innerHTML = renderOrderSummaryHtml();
+        document.getElementById('billReceipt').classList.add('show');
       });
     }
 
