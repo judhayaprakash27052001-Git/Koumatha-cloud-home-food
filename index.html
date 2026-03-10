@@ -46,9 +46,10 @@
     .grid {
       display: grid;
       gap: 16px;
-      grid-template-columns: 1.1fr .9fr;
+      grid-template-columns: 1fr;
     }
-    @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+    .grid.review-open { grid-template-columns: 1.1fr .9fr; }
+    @media (max-width: 900px) { .grid, .grid.review-open { grid-template-columns: 1fr; } }
 
     .panel {
       background: linear-gradient(180deg, rgba(32,47,87,.9), rgba(18,26,48,.95));
@@ -229,6 +230,7 @@
     }
     .summary-box h4 { margin: 0 0 8px; }
     .summary-box .row { display: flex; justify-content: space-between; gap: 10px; margin: 4px 0; }
+    .hidden { display: none !important; }
   </style>
 </head>
 <body>
@@ -238,7 +240,7 @@
       <p>Daily menu • fresh home-style food • quick order with auto-location & payment options.</p>
     </section>
 
-    <div class="grid">
+    <div class="grid" id="pageGrid">
       <section class="panel">
         <div class="title-row"><h2>Customer & Daily Menu</h2><span>Today only</span></div>
 
@@ -246,6 +248,7 @@
           <div class="customer-form">
             <input id="name" type="text" placeholder="Customer full name" required />
             <input id="phone" type="tel" placeholder="Mobile number" required pattern="[0-9]{10}" />
+            <input id="email" type="email" placeholder="Customer email (for order copy)" required />
 
             <div class="location-wrap">
               <input id="mapLink" type="url" placeholder="Map link auto-filled from current device location" required />
@@ -265,10 +268,12 @@
           <div id="menuRoot"></div>
 
           <textarea id="notes" rows="3" placeholder="Special instructions (optional)"></textarea>
+
+          <button class="btn" id="reviewOrderBtn" type="button">Continue to Order & Payment</button>
         </form>
       </section>
 
-      <aside class="panel summary">
+      <aside class="panel summary hidden" id="paymentPanel">
         <div class="title-row"><h2>Order & Payment</h2><span id="itemCount">0 items</span></div>
         <p>Review your order before placing.</p>
         <div class="line"><span>Subtotal</span><strong id="subtotal">₹0</strong></div>
@@ -478,11 +483,13 @@
       const name = document.getElementById('name').value.trim();
       const phone = document.getElementById('phone').value.trim();
       const mapLink = document.getElementById('mapLink').value.trim();
+      const email = document.getElementById('email').value.trim();
       const error = document.getElementById('formError');
       error.textContent = '';
 
       if (!name) return 'Please enter your full name.';
       if (!/^\d{10}$/.test(phone)) return 'Please enter a valid 10-digit mobile number.';
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return 'Please enter a valid email address.';
       if (!mapLink) return 'Please click "Use Location" to auto-fill your current location.';
       if (state.selected.size === 0) return 'Please select at least one daily menu item.';
       return '';
@@ -491,7 +498,7 @@
     function orderSummaryText() {
       const totalText = document.getElementById('total').textContent;
       const items = [...state.selected.values()].map(i => `- ${i.name} x${i.qty} = ₹${i.qty * i.price}`).join('\n');
-      return `Koumatha Home Cloud Kitchen - Daily Menu\nName: ${document.getElementById('name').value.trim()}\nPhone: ${document.getElementById('phone').value.trim()}\nLocation: ${document.getElementById('mapLink').value.trim()}\nPayment: ${document.getElementById('paymentMethod').value}\n\nItems:\n${items}\n\n${totalText}`;
+      return `Koumatha Home Cloud Kitchen - Daily Menu\nName: ${document.getElementById('name').value.trim()}\nPhone: ${document.getElementById('phone').value.trim()}\nEmail: ${document.getElementById('email').value.trim()}\nLocation: ${document.getElementById('mapLink').value.trim()}\nPayment: ${document.getElementById('paymentMethod').value}\n\nItems:\n${items}\n\n${totalText}`;
     }
 
     function applyFilters() {
@@ -541,6 +548,9 @@
         _subject: `New Koumatha Order - ${document.getElementById('name').value.trim()}`,
         customer_name: document.getElementById('name').value.trim(),
         customer_phone: document.getElementById('phone').value.trim(),
+        customer_email: document.getElementById('email').value.trim(),
+        _replyto: document.getElementById('email').value.trim(),
+        _template: 'table',
         payment_method: document.getElementById('paymentMethod').value,
         map_link: document.getElementById('mapLink').value.trim(),
         total: document.getElementById('total').textContent,
@@ -592,6 +602,19 @@
         closeMap();
       });
 
+
+      document.getElementById('reviewOrderBtn').addEventListener('click', () => {
+        const err = validateOrder();
+        if (err) {
+          document.getElementById('formError').textContent = err;
+          return;
+        }
+        updateTotals();
+        document.getElementById('paymentPanel').classList.remove('hidden');
+        document.getElementById('pageGrid').classList.add('review-open');
+        document.getElementById('paymentPanel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+
       document.getElementById('copySummary').addEventListener('click', async () => {
         try {
           await navigator.clipboard.writeText(orderSummaryText());
@@ -622,7 +645,7 @@
 
         const success = document.getElementById('successMsg');
         success.className = 'success show';
-        success.innerHTML = `✅ Order placed and sent to kitchen email. Please complete payment using <strong>${paymentMethod}</strong>.`;
+        success.innerHTML = `✅ Order placed and sent to kitchen email from your submitted details. Please complete payment using <strong>${paymentMethod}</strong>.`;
 
         document.getElementById('billAmount').textContent = `Bill Amount: ${totalText}`;
         document.getElementById('billPaymentMethod').textContent = paymentMethod;
