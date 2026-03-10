@@ -220,6 +220,15 @@
       text-decoration: none;
       font-weight: 700;
     }
+    .summary-box {
+      margin-top: 10px;
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 10px;
+      padding: 10px;
+      background: rgba(6,12,24,.4);
+    }
+    .summary-box h4 { margin: 0 0 8px; }
+    .summary-box .row { display: flex; justify-content: space-between; gap: 10px; margin: 4px 0; }
   </style>
 </head>
 <body>
@@ -263,8 +272,7 @@
         <div class="title-row"><h2>Order & Payment</h2><span id="itemCount">0 items</span></div>
         <p>Review your order before placing.</p>
         <div class="line"><span>Subtotal</span><strong id="subtotal">₹0</strong></div>
-        <div class="line"><span>Delivery</span><strong id="delivery">₹30</strong></div>
-        <div class="line"><span>Total</span><strong id="total">₹30</strong></div>
+                <div class="line"><span>Total</span><strong id="total">₹0</strong></div>
 
         <div class="pay">
           <h3 style="margin:0 0 8px">Payment</h3>
@@ -277,7 +285,7 @@
             <input id="budget" type="number" min="0" placeholder="Budget (optional)" />
           </div>
           <div class="ok" id="budgetMsg"></div>
-          <p class="bill-note">QR and delivery map link will appear after placing your order.</p>
+          <p class="bill-note">After you place order, QR code + full order summary will appear here.</p>
         </div>
 
         <div class="sticky-actions">
@@ -287,7 +295,7 @@
         <div class="success" id="successMsg"></div>
         <div class="bill-receipt" id="billReceipt">
           <p class="bill-amount" id="billAmount">Bill Amount: ₹0</p>
-          <p class="bill-note">Scan QR to pay and use map link for delivery navigation.</p>
+          <p class="bill-note">Scan QR to pay and review your submitted order details below.</p>
           <div class="bill-grid">
             <img alt="UPI QR" src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=upi%3A%2F%2Fpay%3Fpa%3D8838739815%2540ptaxis%26pn%3DKoumatha%26tn%3DFoodOrder" />
             <div>
@@ -296,6 +304,7 @@
               <a id="billMapLink" class="map-view-link" href="#" target="_blank" rel="noopener noreferrer">Open delivery map</a>
             </div>
           </div>
+          <div id="billOrderSummary" style="margin-top:10px"></div>
         </div>
       </aside>
     </div>
@@ -331,6 +340,8 @@
         ["Chapathi", 20], ["Parotta", 25], ["Egg Kothu", 80], ["Veg Noodles", 90]
       ]
     };
+
+    const FORMSPREE_ENDPOINT = "https://formspree.io/f/your-form-id";
 
     const state = {
       selected: new Map(),
@@ -409,11 +420,9 @@
 
     function updateTotals() {
       const subtotal = [...state.selected.values()].reduce((sum, item) => sum + item.price * item.qty, 0);
-      const delivery = subtotal > 0 ? 30 : 0;
-      const total = subtotal + delivery;
+      const total = subtotal;
       document.getElementById('itemCount').textContent = `${state.selected.size} items`;
       document.getElementById('subtotal').textContent = `₹${subtotal}`;
-      document.getElementById('delivery').textContent = `₹${delivery}`;
       document.getElementById('total').textContent = `₹${total}`;
 
       const budget = Number(document.getElementById('budget').value || 0);
@@ -513,6 +522,42 @@
 
     function closeMap() { document.getElementById('mapOverlay').classList.remove('show'); }
 
+
+    function getOrderItems() {
+      return [...state.selected.values()].map(i => ({ name: i.name, qty: i.qty, lineTotal: i.qty * i.price }));
+    }
+
+    function renderOrderSummaryHtml() {
+      const items = getOrderItems();
+      const rows = items.map(i => `<div class="row"><span>${i.name} x ${i.qty}</span><strong>₹${i.lineTotal}</strong></div>`).join('');
+      return `<div class="summary-box"><h4>Order Summary</h4>${rows}<div class="row" style="margin-top:8px;border-top:1px dashed rgba(255,255,255,.2);padding-top:6px"><span>Total</span><strong>${document.getElementById('total').textContent}</strong></div></div>`;
+    }
+
+    async function sendOrderToFormspree() {
+      if (!FORMSPREE_ENDPOINT || FORMSPREE_ENDPOINT.includes('your-form-id')) {
+        throw new Error('Formspree endpoint is not configured. Replace FORMSPREE_ENDPOINT with your real form URL.');
+      }
+      const payload = {
+        _subject: `New Koumatha Order - ${document.getElementById('name').value.trim()}`,
+        customer_name: document.getElementById('name').value.trim(),
+        customer_phone: document.getElementById('phone').value.trim(),
+        payment_method: document.getElementById('paymentMethod').value,
+        map_link: document.getElementById('mapLink').value.trim(),
+        total: document.getElementById('total').textContent,
+        notes: document.getElementById('notes').value.trim(),
+        order_items: getOrderItems().map(i => `${i.name} x${i.qty} = ₹${i.lineTotal}`).join('\n')
+      };
+
+      const res = await fetch(FORMSPREE_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      if (!res.ok) {
+        throw new Error('Failed to submit order to email service.');
+      }
+    }
+
     async function init() {
       buildMenu();
       updateTotals();
@@ -557,7 +602,7 @@
         }
       });
 
-      document.getElementById('placeOrder').addEventListener('click', () => {
+      document.getElementById('placeOrder').addEventListener('click', async () => {
         const err = validateOrder();
         if (err) {
           document.getElementById('formError').textContent = err;
@@ -568,13 +613,21 @@
         const totalText = document.getElementById('total').textContent;
         const mapLink = document.getElementById('mapLink').value.trim();
 
+        try {
+          await sendOrderToFormspree();
+        } catch (mailErr) {
+          document.getElementById('formError').textContent = mailErr.message;
+          return;
+        }
+
         const success = document.getElementById('successMsg');
         success.className = 'success show';
-        success.innerHTML = `✅ Order placed successfully. Please complete payment using <strong>${paymentMethod}</strong>.`;
+        success.innerHTML = `✅ Order placed and sent to kitchen email. Please complete payment using <strong>${paymentMethod}</strong>.`;
 
         document.getElementById('billAmount').textContent = `Bill Amount: ${totalText}`;
         document.getElementById('billPaymentMethod').textContent = paymentMethod;
         document.getElementById('billMapLink').href = mapLink;
+        document.getElementById('billOrderSummary').innerHTML = renderOrderSummaryHtml();
         document.getElementById('billReceipt').classList.add('show');
       });
     }
