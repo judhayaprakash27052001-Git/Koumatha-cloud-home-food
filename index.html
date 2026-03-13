@@ -67,6 +67,8 @@
       border-radius:999px;
       font-size:.85rem;
     }
+    .grid.review-open { grid-template-columns: 1.1fr .9fr; }
+    @media (max-width: 900px) { .grid, .grid.review-open { grid-template-columns: 1fr; } }
 
     .panel {
       background: linear-gradient(180deg, rgba(32,47,87,.9), rgba(18,26,48,.95));
