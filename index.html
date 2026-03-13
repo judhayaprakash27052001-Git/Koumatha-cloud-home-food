@@ -430,6 +430,47 @@
       "Lunch Non-Veg Menu": "Includes Sambar or Vatha Kozhambu — Rasam, Moor, Appam"
     };
 
+    const SECTION_IMAGE_MAP = {
+      "Quick Snacks": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Samosachutney.jpg/320px-Samosachutney.jpg",
+      "Beverages": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Tea_with_milk.jpg/320px-Tea_with_milk.jpg",
+      "Morning Menu (Veg)": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Idli_Sambar.JPG/320px-Idli_Sambar.JPG",
+      "Morning Menu (Non-Veg)": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Indian_Chicken_Curry.jpg/320px-Indian_Chicken_Curry.jpg",
+      "Lunch Veg Menu": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/South_Indian_Meals.jpg/320px-South_Indian_Meals.jpg",
+      "Lunch Sadam Items": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Lemon_rice.jpg/320px-Lemon_rice.jpg",
+      "Lunch Non-Veg Menu": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Hyderabadi_Chicken_Biryani.jpg/320px-Hyderabadi_Chicken_Biryani.jpg",
+      "Dinner Menu (Veg)": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Parotta_with_chicken_curry.jpg/320px-Parotta_with_chicken_curry.jpg",
+      "Dinner Menu (Non-Veg)": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Kothu_parotta.jpg/320px-Kothu_parotta.jpg",
+      "Healthy Items": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/Boiled_eggs.jpg/320px-Boiled_eggs.jpg"
+    };
+
+    const KEYWORD_IMAGE_MAP = {
+      "biryani": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Hyderabadi_Chicken_Biryani.jpg/320px-Hyderabadi_Chicken_Biryani.jpg",
+      "rice": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Lemon_rice.jpg/320px-Lemon_rice.jpg",
+      "idly": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Idli_Sambar.JPG/320px-Idli_Sambar.JPG",
+      "dosa": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Masala_Dosa.jpg/320px-Masala_Dosa.jpg",
+      "parotta": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Kothu_parotta.jpg/320px-Kothu_parotta.jpg",
+      "chapathi": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Roti_with_curry.jpg/320px-Roti_with_curry.jpg",
+      "tea": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Tea_with_milk.jpg/320px-Tea_with_milk.jpg",
+      "coffee": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Cup_of_coffee.jpg/320px-Cup_of_coffee.jpg",
+      "egg": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/Boiled_eggs.jpg/320px-Boiled_eggs.jpg",
+      "chicken": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Indian_Chicken_Curry.jpg/320px-Indian_Chicken_Curry.jpg",
+      "samosa": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Samosachutney.jpg/320px-Samosachutney.jpg",
+      "bajji": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Mirapakaya_bajji.jpg/320px-Mirapakaya_bajji.jpg"
+    };
+
+    function buildDishPlaceholder(name) {
+      const safe = (name || 'Dish').slice(0, 20).replace(/</g, '');
+      return `data:image/svg+xml;utf8,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><defs><linearGradient id='g' x1='0' x2='1'><stop stop-color='#f97316'/><stop offset='1' stop-color='#fb923c'/></linearGradient></defs><rect width='120' height='120' fill='url(#g)'/><text x='60' y='64' text-anchor='middle' font-size='14' font-family='Arial' fill='white'>${safe}</text></svg>`)}`;
+    }
+
+    function getDishImage(section, name) {
+      const lower = name.toLowerCase();
+      for (const [key, url] of Object.entries(KEYWORD_IMAGE_MAP)) {
+        if (lower.includes(key)) return url;
+      }
+      return SECTION_IMAGE_MAP[section] || buildDishPlaceholder(name);
+    }
+
     const FORMSPREE_ENDPOINT = "https://formspree.io/f/your-form-id";
 
     const state = {
@@ -445,7 +486,7 @@
       menuRoot.innerHTML = '';
       Object.entries(MENU).forEach(([section, items]) => {
         const details = document.createElement('details');
-        details.open = false;
+        details.open = true;
         const summary = document.createElement('summary');
         summary.textContent = section + ' (Daily Menu)';
         details.appendChild(summary);
@@ -475,7 +516,9 @@
           img.className = 'dish-img';
           img.alt = name;
           img.loading = 'lazy';
-          img.src = getDishImage(name);
+          img.src = getDishImage(section, name);
+          img.referrerPolicy = "no-referrer";
+          img.onerror = () => { img.onerror = null; img.src = buildDishPlaceholder(name); };
 
           const label = document.createElement('label');
           label.className = 'dish-name';
@@ -519,6 +562,24 @@
 
         details.appendChild(wrap);
         menuRoot.appendChild(details);
+      });
+    }
+
+
+    function ensureMenuVisible() {
+      const hasSections = document.querySelectorAll('#menuRoot details').length > 0;
+      if (hasSections) return;
+
+      const fallback = document.createElement('div');
+      fallback.className = 'summary-box';
+      fallback.innerHTML = '<h4>Menu loading fallback</h4><div class="bill-note">Refreshing menu view… If this message stays, reload once.</div>';
+      menuRoot.appendChild(fallback);
+
+      Object.entries(MENU).forEach(([section, items]) => {
+        const card = document.createElement('div');
+        card.className = 'summary-box';
+        card.innerHTML = `<h4>${section}</h4>` + items.slice(0, 8).map(i => `<div class="row"><span>${i[0]}</span><strong>₹${i[1]}</strong></div>`).join('');
+        menuRoot.appendChild(card);
       });
     }
 
@@ -663,7 +724,7 @@
 
     async function sendOrderToFormspree() {
       if (!FORMSPREE_ENDPOINT || FORMSPREE_ENDPOINT.includes('your-form-id')) {
-        throw new Error('Formspree endpoint is not configured. Replace FORMSPREE_ENDPOINT with your real form URL.');
+        return { ok: false, message: 'Formspree endpoint is not configured. Replace FORMSPREE_ENDPOINT with your real form URL.' };
       }
       const payload = {
         _subject: `New Koumatha Order - ${document.getElementById('name').value.trim()}`,
@@ -685,17 +746,20 @@
         body: JSON.stringify(payload)
       });
       if (!res.ok) {
-        throw new Error('Failed to submit order to email service.');
+        return { ok: false, message: 'Failed to submit order email via Formspree.' };
       }
+      return { ok: true, message: 'Order email sent via Formspree.' };
     }
 
     async function init() {
       buildMenu();
+      ensureMenuVisible();
       updateTotals();
 
       document.getElementById('budget').addEventListener('input', updateTotals);
       document.getElementById('search').addEventListener('input', applyFilters);
       document.getElementById('selectedOnly').addEventListener('change', applyFilters);
+      setTimeout(() => ensureMenuVisible(), 250);
 
       document.getElementById('useCurrentLocation').addEventListener('click', autoFillCurrentLocation);
       document.getElementById('chooseOnMap').addEventListener('click', openMap);
@@ -766,16 +830,15 @@
         const totalText = document.getElementById('total').textContent;
         const mapLink = document.getElementById('mapLink').value.trim();
 
-        try {
-          await sendOrderToFormspree();
-        } catch (mailErr) {
-          document.getElementById('formError').textContent = mailErr.message;
-          return;
-        }
+        const mailResult = await sendOrderToFormspree();
 
         const success = document.getElementById('successMsg');
         success.className = 'success show';
-        success.innerHTML = `✅ Order placed and sent to kitchen email from your submitted details. Please complete payment using <strong>${paymentMethod}</strong>.`;
+        const mailText = mailResult.ok ? 'and sent to kitchen email' : 'but email could not be delivered';
+        success.innerHTML = `✅ Order placed ${mailText}. Please complete payment using <strong>${paymentMethod}</strong>.`;
+        if (!mailResult.ok) {
+          document.getElementById('formError').textContent = mailResult.message;
+        }
 
         document.getElementById('billAmount').textContent = `Bill Amount: ${totalText}`;
         document.getElementById('billPaymentMethod').textContent = paymentMethod;
