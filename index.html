@@ -13,8 +13,8 @@
       --card: #202f57;
       --text: #e7ecff;
       --muted: #9fb1de;
-      --accent: #7c4dff;
-      --accent-2: #2dd4bf;
+      --accent: #f97316;
+      --accent-2: #fb923c;
       --accent-3: #f59e0b;
       --danger: #fb7185;
       --ok: #34d399;
@@ -26,15 +26,14 @@
     body {
       margin: 0;
       font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-      background: radial-gradient(circle at 20% 5%, #25376a 0%, var(--bg) 50%);
+      background: radial-gradient(circle at 20% 5%, #4a2312 0%, var(--bg) 55%);
       color: var(--text);
     }
-    @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
 
     .shell { max-width: 1080px; margin: 0 auto; padding: 16px 16px 48px; }
 
     .hero {
-      background: linear-gradient(120deg, rgba(124, 77, 255, 0.35), rgba(45, 212, 191, 0.25));
+      background: linear-gradient(120deg, rgba(249, 115, 22, 0.35), rgba(251, 146, 60, 0.28));
       border: 1px solid rgba(255,255,255,.18);
       border-radius: 24px;
       box-shadow: var(--shadow);
@@ -48,6 +47,25 @@
       display: grid;
       gap: 16px;
       grid-template-columns: 1fr;
+    }
+    .grid.review-open { grid-template-columns: 1fr; }
+    @media (max-width: 900px) { .grid, .grid.review-open { grid-template-columns: 1fr; } }
+
+    .step-head {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin: 0 0 12px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    .step-badge {
+      background: rgba(249,115,22,.22);
+      border:1px solid rgba(249,115,22,.45);
+      color:#ffd7b5;
+      padding:4px 10px;
+      border-radius:999px;
+      font-size:.85rem;
     }
     .grid.review-open { grid-template-columns: 1.1fr .9fr; }
     @media (max-width: 900px) { .grid, .grid.review-open { grid-template-columns: 1fr; } }
@@ -125,7 +143,7 @@
 
     .item {
       display: grid;
-      grid-template-columns: auto 1fr auto auto;
+      grid-template-columns: auto 56px 1fr auto auto;
       align-items: center;
       gap: 8px;
       padding: 8px;
@@ -134,6 +152,32 @@
       background: rgba(255,255,255,.03);
     }
     .price { color: #ffd166; font-weight: 700; }
+
+    .dish-img {
+      width: 56px;
+      height: 56px;
+      border-radius: 10px;
+      object-fit: cover;
+      border: 1px solid rgba(255,255,255,.18);
+    }
+    .dish-name { font-weight: 600; }
+    .cart-items {
+      margin-top: 10px;
+      display: grid;
+      gap: 8px;
+      max-height: 300px;
+      overflow: auto;
+    }
+    .cart-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 10px;
+      padding: 8px;
+      background: rgba(0,0,0,.2);
+    }
+
     .qty { width: 64px; text-align: center; }
 
     .summary p { margin: 8px 0; color: var(--muted); }
@@ -242,7 +286,8 @@
     </section>
 
     <div class="grid" id="pageGrid">
-      <section class="panel">
+      <section class="panel" id="stepMenu">
+        <div class="step-head"><span>Step 1 of 3</span><span class="step-badge">Customer + Daily Menu</span></div>
         <div class="title-row"><h2>Customer & Daily Menu</h2><span>Today only</span></div>
 
         <form id="orderForm" novalidate>
@@ -270,15 +315,28 @@
 
           <textarea id="notes" rows="3" placeholder="Special instructions (optional)"></textarea>
 
-          <button class="btn" id="reviewOrderBtn" type="button">Continue to Order & Payment</button>
+          <button class="btn" id="reviewOrderBtn" type="button">Next: Review Cart</button>
         </form>
       </section>
 
+      <aside class="panel summary hidden" id="cartPanel">
+        <div class="step-head"><span>Step 2 of 3</span><span class="step-badge">Cart Review</span></div>
+        <div class="title-row"><h2>🛒 Your Cart</h2><span id="cartCount">0 items</span></div>
+        <p>Review selected dishes before moving to payment.</p>
+        <div class="line"><span>Cart Total</span><strong id="cartTotal">₹0</strong></div>
+        <div id="cartItems" class="cart-items"></div>
+        <div class="sticky-actions">
+          <button class="btn warn" id="backToMenuBtn" type="button">Back to Menu</button>
+          <button class="btn" id="goToPaymentBtn" type="button">Next: Payment</button>
+        </div>
+      </aside>
+
       <aside class="panel summary hidden" id="paymentPanel">
+        <div class="step-head"><span>Step 3 of 3</span><span class="step-badge">Payment & Place Order</span></div>
         <div class="title-row"><h2>Order & Payment</h2><span id="itemCount">0 items</span></div>
         <p>Review your order before placing.</p>
         <div class="line"><span>Subtotal</span><strong id="subtotal">₹0</strong></div>
-                <div class="line"><span>Total</span><strong id="total">₹0</strong></div>
+        <div class="line"><span>Total</span><strong id="total">₹0</strong></div>
 
         <div class="pay">
           <h3 style="margin:0 0 8px">Payment</h3>
@@ -295,6 +353,7 @@
         </div>
 
         <div class="sticky-actions">
+          <button class="btn warn" id="backToCartBtn" type="button">Back to Cart</button>
           <button class="btn warn" id="copySummary" type="button">Copy Order</button>
           <button class="btn" id="placeOrder" type="button">Place Order</button>
         </div>
@@ -412,7 +471,14 @@
           cb.type = 'checkbox';
           cb.id = key;
 
+          const img = document.createElement('img');
+          img.className = 'dish-img';
+          img.alt = name;
+          img.loading = 'lazy';
+          img.src = getDishImage(name);
+
           const label = document.createElement('label');
+          label.className = 'dish-name';
           label.setAttribute('for', key);
           label.textContent = name;
 
@@ -447,7 +513,7 @@
             }
           });
 
-          row.append(cb, label, amount, qty);
+          row.append(cb, img, label, amount, qty);
           wrap.appendChild(row);
         });
 
@@ -563,8 +629,30 @@
     function closeMap() { document.getElementById('mapOverlay').classList.remove('show'); }
 
 
+    function showStep(step) {
+      document.getElementById('stepMenu').classList.toggle('hidden', step !== 'menu');
+      document.getElementById('cartPanel').classList.toggle('hidden', step !== 'cart');
+      document.getElementById('paymentPanel').classList.toggle('hidden', step !== 'payment');
+      if (step === 'cart') renderCartPreview();
+      updateTotals();
+      const target = step === 'menu' ? 'stepMenu' : step === 'cart' ? 'cartPanel' : 'paymentPanel';
+      document.getElementById(target).scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
     function getOrderItems() {
       return [...state.selected.values()].map(i => ({ name: i.name, qty: i.qty, lineTotal: i.qty * i.price }));
+    }
+
+    function renderCartPreview() {
+      const items = getOrderItems();
+      const cartItems = document.getElementById('cartItems');
+      document.getElementById('cartCount').textContent = `${items.length} items`;
+      document.getElementById('cartTotal').textContent = document.getElementById('total').textContent;
+      if (!items.length) {
+        cartItems.innerHTML = "<div class=\"bill-note\">No items in cart.</div>";
+        return;
+      }
+      cartItems.innerHTML = items.map(i => `<div class=\"cart-row\"><span>${i.name} x ${i.qty}</span><strong>₹${i.lineTotal}</strong></div>`).join('');
     }
 
     function renderOrderSummaryHtml() {
@@ -643,10 +731,19 @@
           return;
         }
         updateTotals();
-        document.getElementById('paymentPanel').classList.remove('hidden');
-        document.getElementById('pageGrid').classList.add('review-open');
-        document.getElementById('paymentPanel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        showStep('cart');
       });
+
+      document.getElementById('goToPaymentBtn').addEventListener('click', () => {
+        if (state.selected.size === 0) {
+          document.getElementById('formError').textContent = 'Please add items to cart before payment.';
+          return;
+        }
+        showStep('payment');
+      });
+
+      document.getElementById('backToMenuBtn').addEventListener('click', () => showStep('menu'));
+      document.getElementById('backToCartBtn').addEventListener('click', () => showStep('cart'));
 
       document.getElementById('copySummary').addEventListener('click', async () => {
         try {
