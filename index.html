@@ -484,7 +484,7 @@
       menuRoot.innerHTML = '';
       Object.entries(MENU).forEach(([section, items]) => {
         const details = document.createElement('details');
-        details.open = false;
+        details.open = true;
         const summary = document.createElement('summary');
         summary.textContent = section + ' (Daily Menu)';
         details.appendChild(summary);
@@ -560,6 +560,24 @@
 
         details.appendChild(wrap);
         menuRoot.appendChild(details);
+      });
+    }
+
+
+    function ensureMenuVisible() {
+      const hasSections = document.querySelectorAll('#menuRoot details').length > 0;
+      if (hasSections) return;
+
+      const fallback = document.createElement('div');
+      fallback.className = 'summary-box';
+      fallback.innerHTML = '<h4>Menu loading fallback</h4><div class="bill-note">Refreshing menu view… If this message stays, reload once.</div>';
+      menuRoot.appendChild(fallback);
+
+      Object.entries(MENU).forEach(([section, items]) => {
+        const card = document.createElement('div');
+        card.className = 'summary-box';
+        card.innerHTML = `<h4>${section}</h4>` + items.slice(0, 8).map(i => `<div class="row"><span>${i[0]}</span><strong>₹${i[1]}</strong></div>`).join('');
+        menuRoot.appendChild(card);
       });
     }
 
@@ -733,11 +751,13 @@
 
     async function init() {
       buildMenu();
+      ensureMenuVisible();
       updateTotals();
 
       document.getElementById('budget').addEventListener('input', updateTotals);
       document.getElementById('search').addEventListener('input', applyFilters);
       document.getElementById('selectedOnly').addEventListener('change', applyFilters);
+      setTimeout(() => ensureMenuVisible(), 250);
 
       document.getElementById('useCurrentLocation').addEventListener('click', autoFillCurrentLocation);
       document.getElementById('chooseOnMap').addEventListener('click', openMap);
