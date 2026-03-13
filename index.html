@@ -430,21 +430,6 @@
       "Lunch Non-Veg Menu": "Includes Sambar or Vatha Kozhambu — Rasam, Moor, Appam"
     };
 
-    const DISH_IMAGE_MAP = {
-      "Chicken Biryani": "https://images.unsplash.com/photo-1563379091339-03246963d29c?auto=format&fit=crop&w=200&q=60",
-      "Idly (1 piece)": "https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=200&q=60",
-      "Dosa (1 piece)": "https://images.unsplash.com/photo-1630409351217-bc4fa6422075?auto=format&fit=crop&w=200&q=60",
-      "Parotta": "https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=200&q=60",
-      "Veg Fried Rice": "https://images.unsplash.com/photo-1512058564366-18510be2db19?auto=format&fit=crop&w=200&q=60",
-      "Tea": "https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=200&q=60",
-      "Coffee": "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=200&q=60",
-      "Samosa": "https://images.unsplash.com/photo-1601050690117-7b83f0db7d0d?auto=format&fit=crop&w=200&q=60"
-    };
-
-    function getDishImage(name) {
-      return DISH_IMAGE_MAP[name] || `https://source.unsplash.com/100x100/?${encodeURIComponent(name + ',indian food')}`;
-    }
-
     const FORMSPREE_ENDPOINT = "https://formspree.io/f/your-form-id";
 
     const state = {
