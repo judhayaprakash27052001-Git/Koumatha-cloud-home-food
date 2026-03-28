@@ -30,18 +30,106 @@
       color: var(--text);
     }
 
-    .shell { max-width: 1080px; margin: 0 auto; padding: 16px 16px 48px; }
+    
+
+    .shell { max-width: 100%; margin: 0; padding: 20px 24px 56px; }
 
     .hero {
-      background: linear-gradient(120deg, rgba(249, 115, 22, 0.35), rgba(251, 146, 60, 0.28));
+      min-height: 52vh;
+      display: grid;
+      align-content: center;
+      gap: 12px;
+      background: linear-gradient(120deg, rgba(249, 115, 22, 0.45), rgba(91, 124, 250, 0.25));
       border: 1px solid rgba(255,255,255,.18);
       border-radius: 24px;
       box-shadow: var(--shadow);
-      padding: 24px;
+      padding: clamp(24px, 4vw, 52px);
       margin-bottom: 16px;
     }
-    .hero h1 { margin: 0; font-size: clamp(1.5rem, 2.5vw, 2.4rem); }
-    .hero p { margin: 8px 0 0; color: var(--muted); }
+    .hero h1 { margin: 0; font-size: clamp(1.8rem, 4vw, 3.2rem); }
+    .hero p { margin: 0; color: #d7e3ff; font-size: clamp(1rem, 1.7vw, 1.2rem); max-width: 70ch; }
+
+    .phase-strip {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(180px, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .phase-card {
+      background: rgba(18, 26, 48, 0.92);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 14px;
+      padding: 12px;
+    }
+    .phase-card strong { color: #ffd9b2; display: block; margin-bottom: 4px; }
+    .phase-card p { margin: 0; color: var(--muted); font-size: .95rem; }
+
+    .partners {
+      margin: 12px 0 18px;
+      background: linear-gradient(180deg, rgba(32,47,87,.88), rgba(18,26,48,.95));
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+    .partners h2 { margin: 0 0 8px; }
+    .partners p { margin: 0 0 14px; color: var(--muted); }
+    .partner-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(150px, 1fr));
+      gap: 10px;
+    }
+    .partner-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--text);
+      padding: 10px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.15);
+      background: rgba(255,255,255,.03);
+      transition: transform .15s ease, border-color .15s ease;
+    }
+    .partner-link:hover { transform: translateY(-2px); border-color: rgba(249,115,22,.55); }
+    .partner-logo {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: .3px;
+      font-size: .75rem;
+      flex: 0 0 36px;
+    }
+    .zomato { background: #e23744; }
+    .swiggy { background: #fc8019; }
+    .ubereats { background: #111827; }
+    .eatsure { background: #5b7cfa; }
+
+    .weekly-menu {
+      margin: 16px 0;
+      background: linear-gradient(135deg, rgba(91,124,250,.24), rgba(249,115,22,.24));
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 16px;
+      padding: 16px;
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .weekly-menu h3 { margin: 0; }
+    .weekly-menu p { margin: 5px 0 0; color: #dbe6ff; }
+
+    @media (max-width: 920px) {
+      .phase-strip { grid-template-columns: 1fr; }
+      .partner-grid { grid-template-columns: 1fr 1fr; }
+      .shell { padding: 14px; }
+      .hero { min-height: auto; }
+    }
 
     .grid {
       display: grid;
@@ -280,9 +368,47 @@
 </head>
 <body>
   <div class="shell">
+
     <section class="hero">
       <h1>☁️ Koumatha Home Cloud Kitchen</h1>
-      <p>Daily menu • fresh home-style food • quick order with auto-location & payment options.</p>
+      <p>Ultra full-screen restaurant experience with instant partner ordering, today’s live daily menu, and quick access to weekly specials.</p>
+    </section>
+
+    <section class="phase-strip" aria-label="3 phase layout">
+      <article class="phase-card"><strong>Phase 1</strong><p>Order via Zomato, Swiggy, Uber Eats, and EatSure partner links.</p></article>
+      <article class="phase-card"><strong>Phase 2</strong><p>Use the full daily menu below to customize and place your order directly.</p></article>
+      <article class="phase-card"><strong>Phase 3</strong><p>Open the weekly menu page for upcoming day-wise meal planning.</p></article>
+    </section>
+
+    <section class="partners" id="partner-ordering">
+      <h2>Order on Delivery Apps</h2>
+      <p>Select your favorite app logo to redirect to Koumatha restaurant listing.</p>
+      <div class="partner-grid">
+        <a class="partner-link" href="https://www.zomato.com" target="_blank" rel="noopener noreferrer" aria-label="Open Zomato">
+          <span class="partner-logo zomato">ZO</span>
+          <span>Zomato</span>
+        </a>
+        <a class="partner-link" href="https://www.swiggy.com" target="_blank" rel="noopener noreferrer" aria-label="Open Swiggy">
+          <span class="partner-logo swiggy">SW</span>
+          <span>Swiggy (Swaggy)</span>
+        </a>
+        <a class="partner-link" href="https://www.ubereats.com" target="_blank" rel="noopener noreferrer" aria-label="Open Uber Eats">
+          <span class="partner-logo ubereats">UE</span>
+          <span>Uber Eats</span>
+        </a>
+        <a class="partner-link" href="https://www.eatsure.com" target="_blank" rel="noopener noreferrer" aria-label="Open EatSure">
+          <span class="partner-logo eatsure">ES</span>
+          <span>EatSure</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="weekly-menu" id="weekly-menu-link">
+      <div>
+        <h3>Weekly Menu Page</h3>
+        <p>Want full 7-day rotation? Open our separate weekly menu page.</p>
+      </div>
+      <a class="btn" href="weekly-menu.html">Open Weekly Menu</a>
     </section>
 
     <div class="grid" id="pageGrid">
