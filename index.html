@@ -26,8 +26,18 @@
     body {
       margin: 0;
       font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-      background: radial-gradient(circle at 20% 5%, #4a2312 0%, var(--bg) 55%);
+      background: radial-gradient(circle at 10% 10%, #5f2d19 0%, transparent 35%),
+                  radial-gradient(circle at 90% 10%, #1e2d69 0%, transparent 30%),
+                  radial-gradient(circle at 50% 90%, #1f6c5b 0%, transparent 32%),
+                  var(--bg);
+      background-size: 140% 140%;
+      animation: aurora 18s ease-in-out infinite alternate;
       color: var(--text);
+    }
+    @keyframes aurora {
+      0% { background-position: 0% 10%; }
+      50% { background-position: 50% 90%; }
+      100% { background-position: 100% 20%; }
     }
 
     
@@ -45,6 +55,23 @@
       box-shadow: var(--shadow);
       padding: clamp(24px, 4vw, 52px);
       margin-bottom: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      top: -60px;
+      right: -40px;
+      background: radial-gradient(circle, rgba(255,255,255,.28), rgba(255,255,255,0));
+      animation: floatGlow 6s ease-in-out infinite;
+      pointer-events: none;
+    }
+    @keyframes floatGlow {
+      0%, 100% { transform: translateY(0) scale(1); opacity: .6; }
+      50% { transform: translateY(16px) scale(1.08); opacity: 1; }
     }
     .hero h1 { margin: 0; font-size: clamp(1.8rem, 4vw, 3.2rem); }
     .hero p { margin: 0; color: #d7e3ff; font-size: clamp(1rem, 1.7vw, 1.2rem); max-width: 70ch; }
@@ -73,7 +100,7 @@
       box-shadow: var(--shadow);
     }
     .partners h2 { margin: 0 0 8px; }
-    .partners p { margin: 0 0 14px; color: var(--muted); }
+    .partners p { margin: 0 0 14px; color: #d6e3ff; line-height: 1.55; }
     .partner-grid {
       display: grid;
       grid-template-columns: repeat(4, minmax(150px, 1fr));
@@ -109,6 +136,26 @@
     .ubereats { background: #111827; }
     .eatsure { background: #5b7cfa; }
 
+    .quick-nav {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .quick-nav label {
+      display: grid;
+      gap: 6px;
+      color: #d5e2ff;
+      font-weight: 600;
+      font-size: .92rem;
+    }
+    .quick-nav select {
+      background: rgba(6, 12, 24, 0.78);
+      border: 1px solid rgba(255,255,255,.2);
+      color: #f4f7ff;
+      font-weight: 600;
+    }
+
     .weekly-menu {
       margin: 16px 0;
       background: linear-gradient(135deg, rgba(91,124,250,.24), rgba(249,115,22,.24));
@@ -127,6 +174,7 @@
     @media (max-width: 920px) {
       .phase-strip { grid-template-columns: 1fr; }
       .partner-grid { grid-template-columns: 1fr 1fr; }
+      .quick-nav { grid-template-columns: 1fr; }
       .shell { padding: 14px; }
       .hero { min-height: auto; }
     }
@@ -400,6 +448,24 @@
           <span class="partner-logo eatsure">ES</span>
           <span>EatSure</span>
         </a>
+      </div>
+      <div class="quick-nav">
+        <label for="weeklyMenuDropdown">
+          Weekly Menu Dropdown Link
+          <select id="weeklyMenuDropdown">
+            <option value="">Select weekly menu destination</option>
+            <option value="weekly-menu.html">Open weekly menu page</option>
+            <option value="https://github.com/your-org/weekly-menu-repo">Weekly menu repo link (replace with your URL)</option>
+          </select>
+        </label>
+        <label for="dailyMenuDropdown">
+          Daily Menu Dropdown Link
+          <select id="dailyMenuDropdown">
+            <option value="">Select daily menu destination</option>
+            <option value="#stepMenu">Open daily menu section</option>
+            <option value="index.html">Reload daily menu page</option>
+          </select>
+        </label>
       </div>
     </section>
 
@@ -886,6 +952,28 @@
       document.getElementById('search').addEventListener('input', applyFilters);
       document.getElementById('selectedOnly').addEventListener('change', applyFilters);
       setTimeout(() => ensureMenuVisible(), 250);
+
+      document.getElementById('weeklyMenuDropdown').addEventListener('change', (e) => {
+        const target = e.target.value;
+        if (!target) return;
+        if (target.startsWith('http')) {
+          window.open(target, '_blank', 'noopener,noreferrer');
+        } else {
+          window.location.href = target;
+        }
+        e.target.value = '';
+      });
+
+      document.getElementById('dailyMenuDropdown').addEventListener('change', (e) => {
+        const target = e.target.value;
+        if (!target) return;
+        if (target.startsWith('#')) {
+          document.querySelector(target)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else {
+          window.location.href = target;
+        }
+        e.target.value = '';
+      });
 
       document.getElementById('useCurrentLocation').addEventListener('click', autoFillCurrentLocation);
       document.getElementById('chooseOnMap').addEventListener('click', openMap);
