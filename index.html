@@ -26,12 +26,7 @@
     body {
       margin: 0;
       font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-      background: radial-gradient(circle at 10% 10%, #5f2d19 0%, transparent 35%),
-                  radial-gradient(circle at 90% 10%, #1e2d69 0%, transparent 30%),
-                  radial-gradient(circle at 50% 90%, #1f6c5b 0%, transparent 32%),
-                  var(--bg);
-      background-size: 140% 140%;
-      animation: aurora 18s ease-in-out infinite alternate;
+      background: linear-gradient(180deg, #fff8f2 0%, #fff 35%, #f7f8ff 100%);
       color: var(--text);
     }
     @keyframes aurora {
@@ -42,17 +37,19 @@
 
     
 
+    
+
     .shell { max-width: 100%; margin: 0; padding: 20px 24px 56px; }
 
     .hero {
-      min-height: 52vh;
+      min-height: 38vh;
       display: grid;
       align-content: center;
       gap: 12px;
-      background: linear-gradient(120deg, rgba(249, 115, 22, 0.45), rgba(91, 124, 250, 0.25));
-      border: 1px solid rgba(255,255,255,.18);
+      background: linear-gradient(125deg, #ffeddc 0%, #ffe4d3 45%, #eaf0ff 100%);
+      border: 1px solid rgba(249, 115, 22, .18);
       border-radius: 24px;
-      box-shadow: var(--shadow);
+      box-shadow: 0 20px 45px rgba(35, 42, 72, .12);
       padding: clamp(24px, 4vw, 52px);
       margin-bottom: 16px;
       position: relative;
@@ -73,34 +70,21 @@
       0%, 100% { transform: translateY(0) scale(1); opacity: .6; }
       50% { transform: translateY(16px) scale(1.08); opacity: 1; }
     }
-    .hero h1 { margin: 0; font-size: clamp(1.8rem, 4vw, 3.2rem); }
-    .hero p { margin: 0; color: #d7e3ff; font-size: clamp(1rem, 1.7vw, 1.2rem); max-width: 70ch; }
+    .hero h1 { margin: 0; font-size: clamp(2rem, 4vw, 3rem); color: #1d2340; }
+    .hero p { margin: 0; color: #3d486f; font-size: clamp(1rem, 1.7vw, 1.16rem); max-width: 72ch; line-height: 1.6; font-weight: 500; }
 
-    .phase-strip {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(180px, 1fr));
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-    .phase-card {
-      background: rgba(18, 26, 48, 0.92);
-      border: 1px solid rgba(255,255,255,.12);
-      border-radius: 14px;
-      padding: 12px;
-    }
-    .phase-card strong { color: #ffd9b2; display: block; margin-bottom: 4px; }
-    .phase-card p { margin: 0; color: var(--muted); font-size: .95rem; }
+    .phase-strip { display: none; }
 
     .partners {
       margin: 12px 0 18px;
-      background: linear-gradient(180deg, rgba(32,47,87,.88), rgba(18,26,48,.95));
-      border: 1px solid rgba(255,255,255,.12);
+      background: #ffffff;
+      border: 1px solid rgba(255, 169, 114, .35);
       border-radius: 18px;
-      padding: 18px;
-      box-shadow: var(--shadow);
+      padding: 20px;
+      box-shadow: 0 16px 35px rgba(35, 42, 72, .09);
     }
-    .partners h2 { margin: 0 0 8px; }
-    .partners p { margin: 0 0 14px; color: #d6e3ff; line-height: 1.55; }
+    .partners h2 { margin: 0 0 8px; color: #1f2442; }
+    .partners p { margin: 0 0 14px; color: #4f5a81; line-height: 1.55; }
     .partner-grid {
       display: grid;
       grid-template-columns: repeat(4, minmax(150px, 1fr));
@@ -111,14 +95,14 @@
       align-items: center;
       gap: 10px;
       text-decoration: none;
-      color: var(--text);
-      padding: 10px;
+      color: #1f2442;
+      padding: 12px;
       border-radius: 12px;
-      border: 1px solid rgba(255,255,255,.15);
-      background: rgba(255,255,255,.03);
+      border: 1px solid rgba(207, 216, 255, .95);
+      background: #f8faff;
       transition: transform .15s ease, border-color .15s ease;
     }
-    .partner-link:hover { transform: translateY(-2px); border-color: rgba(249,115,22,.55); }
+    .partner-link:hover { transform: translateY(-2px); border-color: rgba(249,115,22,.55); background:#fff4ec; }
     .partner-logo {
       width: 36px;
       height: 36px;
@@ -135,6 +119,14 @@
     .swiggy { background: #fc8019; }
     .ubereats { background: #111827; }
     .eatsure { background: #5b7cfa; }
+    .partner-logo-img {
+      width: 26px;
+      height: 26px;
+      object-fit: contain;
+      display: block;
+      filter: drop-shadow(0 1px 2px rgba(0,0,0,.18));
+    }
+    .partner-name { font-weight: 700; }
 
     .quick-nav {
       margin-top: 14px;
@@ -142,17 +134,26 @@
       grid-template-columns: 1fr 1fr;
       gap: 10px;
     }
+    .quick-card {
+      background: #f9fbff;
+      border: 1px solid #d5defc;
+      border-radius: 14px;
+      padding: 12px;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.5);
+    }
+    .quick-card h4 { margin: 0 0 4px; color: #20284a; }
+    .quick-card p { margin: 0 0 10px; color: #5b6691; font-size: .92rem; }
     .quick-nav label {
       display: grid;
       gap: 6px;
-      color: #d5e2ff;
+      color: #3f4c7a;
       font-weight: 600;
       font-size: .92rem;
     }
     .quick-nav select {
-      background: rgba(6, 12, 24, 0.78);
-      border: 1px solid rgba(255,255,255,.2);
-      color: #f4f7ff;
+      background: #fff;
+      border: 1px solid #bfcdf8;
+      color: #26305a;
       font-weight: 600;
     }
 
@@ -172,7 +173,6 @@
     .weekly-menu p { margin: 5px 0 0; color: #dbe6ff; }
 
     @media (max-width: 920px) {
-      .phase-strip { grid-template-columns: 1fr; }
       .partner-grid { grid-template-columns: 1fr 1fr; }
       .quick-nav { grid-template-columns: 1fr; }
       .shell { padding: 14px; }
@@ -419,53 +419,53 @@
 
     <section class="hero">
       <h1>☁️ Koumatha Home Cloud Kitchen</h1>
-      <p>Ultra full-screen restaurant experience with instant partner ordering, today’s live daily menu, and quick access to weekly specials.</p>
-    </section>
-
-    <section class="phase-strip" aria-label="3 phase layout">
-      <article class="phase-card"><strong>Phase 1</strong><p>Order via Zomato, Swiggy, Uber Eats, and EatSure partner links.</p></article>
-      <article class="phase-card"><strong>Phase 2</strong><p>Use the full daily menu below to customize and place your order directly.</p></article>
-      <article class="phase-card"><strong>Phase 3</strong><p>Open the weekly menu page for upcoming day-wise meal planning.</p></article>
+      <p>Online order front page with delivery partners first, then easy daily menu jump links, and weekly menu quick access — clean, readable, and customer-friendly.</p>
     </section>
 
     <section class="partners" id="partner-ordering">
       <h2>Order on Delivery Apps</h2>
-      <p>Select your favorite app logo to redirect to Koumatha restaurant listing.</p>
+      <p>Tap your preferred app logo to open Koumatha ordering.</p>
       <div class="partner-grid">
         <a class="partner-link" href="https://www.zomato.com" target="_blank" rel="noopener noreferrer" aria-label="Open Zomato">
-          <span class="partner-logo zomato">ZO</span>
-          <span>Zomato</span>
+          <span class="partner-logo zomato"><img class="partner-logo-img" src="https://cdn.simpleicons.org/zomato/ffffff" alt="Zomato logo"></span>
+          <span class="partner-name">Zomato</span>
         </a>
         <a class="partner-link" href="https://www.swiggy.com" target="_blank" rel="noopener noreferrer" aria-label="Open Swiggy">
-          <span class="partner-logo swiggy">SW</span>
-          <span>Swiggy (Swaggy)</span>
+          <span class="partner-logo swiggy"><img class="partner-logo-img" src="https://cdn.simpleicons.org/swiggy/ffffff" alt="Swiggy logo"></span>
+          <span class="partner-name">Swiggy</span>
         </a>
         <a class="partner-link" href="https://www.ubereats.com" target="_blank" rel="noopener noreferrer" aria-label="Open Uber Eats">
-          <span class="partner-logo ubereats">UE</span>
-          <span>Uber Eats</span>
+          <span class="partner-logo ubereats"><img class="partner-logo-img" src="https://cdn.simpleicons.org/ubereats/ffffff" alt="Uber Eats logo"></span>
+          <span class="partner-name">Uber Eats</span>
         </a>
         <a class="partner-link" href="https://www.eatsure.com" target="_blank" rel="noopener noreferrer" aria-label="Open EatSure">
-          <span class="partner-logo eatsure">ES</span>
-          <span>EatSure</span>
+          <span class="partner-logo eatsure"><img class="partner-logo-img" src="https://cdn.simpleicons.org/justeat/ffffff" alt="EatSure logo"></span>
+          <span class="partner-name">EatSure</span>
         </a>
       </div>
       <div class="quick-nav">
-        <label for="weeklyMenuDropdown">
-          Weekly Menu Dropdown Link
-          <select id="weeklyMenuDropdown">
-            <option value="">Select weekly menu destination</option>
-            <option value="weekly-menu.html">Open weekly menu page</option>
-            <option value="https://github.com/your-org/weekly-menu-repo">Weekly menu repo link (replace with your URL)</option>
-          </select>
-        </label>
-        <label for="dailyMenuDropdown">
-          Daily Menu Dropdown Link
-          <select id="dailyMenuDropdown">
-            <option value="">Select daily menu destination</option>
-            <option value="#stepMenu">Open daily menu section</option>
-            <option value="index.html">Reload daily menu page</option>
-          </select>
-        </label>
+        <div class="quick-card">
+          <h4>Daily Menu Link / Dropdown</h4>
+          <p>Choose any daily menu section from this dropdown.</p>
+          <label for="dailyMenuDropdown">
+            Daily Menu Sections
+            <select id="dailyMenuDropdown">
+              <option value="">Select daily menu category</option>
+            </select>
+          </label>
+        </div>
+        <div class="quick-card">
+          <h4>Weekly Menu Link / Dropdown</h4>
+          <p>Open weekly page or jump to specific day sections.</p>
+          <label for="weeklyMenuDropdown">
+            Weekly Menu Options
+            <select id="weeklyMenuDropdown">
+              <option value="">Select weekly menu destination</option>
+              <option value="weekly-menu.html">Open weekly menu page</option>
+              <option value="https://github.com/your-org/weekly-menu-repo">Weekly menu repo link (replace with your URL)</option>
+            </select>
+          </label>
+        </div>
       </div>
     </section>
 
@@ -674,11 +674,16 @@
 
     const menuRoot = document.getElementById('menuRoot');
 
+    function toSectionId(sectionName) {
+      return `menu-${sectionName.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+    }
+
     function buildMenu() {
       menuRoot.innerHTML = '';
       Object.entries(MENU).forEach(([section, items]) => {
         const details = document.createElement('details');
         details.open = true;
+        details.id = toSectionId(section);
         const summary = document.createElement('summary');
         summary.textContent = section + ' (Daily Menu)';
         details.appendChild(summary);
@@ -947,6 +952,27 @@
       buildMenu();
       ensureMenuVisible();
       updateTotals();
+      const dailyMenuDropdown = document.getElementById('dailyMenuDropdown');
+      Object.keys(MENU).forEach(section => {
+        const option = document.createElement('option');
+        option.value = `#${toSectionId(section)}`;
+        option.textContent = section;
+        dailyMenuDropdown.appendChild(option);
+      });
+      [
+        ['Monday', 'weekly-menu.html#monday'],
+        ['Tuesday', 'weekly-menu.html#tuesday'],
+        ['Wednesday', 'weekly-menu.html#wednesday'],
+        ['Thursday', 'weekly-menu.html#thursday'],
+        ['Friday', 'weekly-menu.html#friday'],
+        ['Saturday', 'weekly-menu.html#saturday'],
+        ['Sunday', 'weekly-menu.html#sunday']
+      ].forEach(([day, href]) => {
+        const option = document.createElement('option');
+        option.value = href;
+        option.textContent = `${day} weekly menu`;
+        document.getElementById('weeklyMenuDropdown').appendChild(option);
+      });
 
       document.getElementById('budget').addEventListener('input', updateTotals);
       document.getElementById('search').addEventListener('input', applyFilters);
