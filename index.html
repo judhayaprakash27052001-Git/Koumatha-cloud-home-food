@@ -26,22 +26,151 @@
     body {
       margin: 0;
       font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-      background: radial-gradient(circle at 20% 5%, #4a2312 0%, var(--bg) 55%);
+      background: linear-gradient(180deg, #fff8f2 0%, #fff 35%, #f7f8ff 100%);
       color: var(--text);
     }
 
-    .shell { max-width: 1080px; margin: 0 auto; padding: 16px 16px 48px; }
+    
+
+    .shell { max-width: 100%; margin: 0; padding: 20px 24px 56px; }
 
     .hero {
-      background: linear-gradient(120deg, rgba(249, 115, 22, 0.35), rgba(251, 146, 60, 0.28));
-      border: 1px solid rgba(255,255,255,.18);
+      min-height: 38vh;
+      display: grid;
+      align-content: center;
+      gap: 12px;
+      background: linear-gradient(125deg, #ffeddc 0%, #ffe4d3 45%, #eaf0ff 100%);
+      border: 1px solid rgba(249, 115, 22, .18);
       border-radius: 24px;
-      box-shadow: var(--shadow);
-      padding: 24px;
+      box-shadow: 0 20px 45px rgba(35, 42, 72, .12);
+      padding: clamp(24px, 4vw, 52px);
       margin-bottom: 16px;
+      position: relative;
+      overflow: hidden;
     }
-    .hero h1 { margin: 0; font-size: clamp(1.5rem, 2.5vw, 2.4rem); }
-    .hero p { margin: 8px 0 0; color: var(--muted); }
+    .hero::before {
+      content: "";
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      top: -60px;
+      right: -40px;
+      background: radial-gradient(circle, rgba(255,255,255,.28), rgba(255,255,255,0));
+      animation: floatGlow 6s ease-in-out infinite;
+      pointer-events: none;
+    }
+    @keyframes floatGlow {
+      0%, 100% { transform: translateY(0) scale(1); opacity: .6; }
+      50% { transform: translateY(16px) scale(1.08); opacity: 1; }
+    }
+    .hero h1 { margin: 0; font-size: clamp(2rem, 4vw, 3rem); color: #1d2340; }
+    .hero p { margin: 0; color: #3d486f; font-size: clamp(1rem, 1.7vw, 1.16rem); max-width: 72ch; line-height: 1.6; font-weight: 500; }
+
+    .phase-strip { display: none; }
+
+    .partners {
+      margin: 12px 0 18px;
+      background: #ffffff;
+      border: 1px solid rgba(255, 169, 114, .35);
+      border-radius: 18px;
+      padding: 20px;
+      box-shadow: 0 16px 35px rgba(35, 42, 72, .09);
+    }
+    .partners h2 { margin: 0 0 8px; color: #1f2442; }
+    .partners p { margin: 0 0 14px; color: #4f5a81; line-height: 1.55; }
+    .partner-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(150px, 1fr));
+      gap: 10px;
+    }
+    .partner-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: #1f2442;
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(207, 216, 255, .95);
+      background: #f8faff;
+      transition: transform .15s ease, border-color .15s ease;
+    }
+    .partner-link:hover { transform: translateY(-2px); border-color: rgba(249,115,22,.55); background:#fff4ec; }
+    .partner-logo {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: .3px;
+      font-size: .75rem;
+      flex: 0 0 36px;
+    }
+    .zomato { background: #e23744; }
+    .swiggy { background: #fc8019; }
+    .ubereats { background: #111827; }
+    .eatsure { background: #5b7cfa; }
+    .partner-logo-img {
+      width: 26px;
+      height: 26px;
+      object-fit: contain;
+      display: block;
+      filter: drop-shadow(0 1px 2px rgba(0,0,0,.18));
+    }
+    .partner-name { font-weight: 700; }
+
+    .quick-nav {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .quick-card {
+      background: #f9fbff;
+      border: 1px solid #d5defc;
+      border-radius: 14px;
+      padding: 12px;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.5);
+    }
+    .quick-card h4 { margin: 0 0 4px; color: #20284a; }
+    .quick-card p { margin: 0 0 10px; color: #5b6691; font-size: .92rem; }
+    .quick-nav label {
+      display: grid;
+      gap: 6px;
+      color: #3f4c7a;
+      font-weight: 600;
+      font-size: .92rem;
+    }
+    .quick-nav select {
+      background: #fff;
+      border: 1px solid #bfcdf8;
+      color: #26305a;
+      font-weight: 600;
+    }
+
+    .weekly-menu {
+      margin: 16px 0;
+      background: linear-gradient(135deg, rgba(91,124,250,.24), rgba(249,115,22,.24));
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 16px;
+      padding: 16px;
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .weekly-menu h3 { margin: 0; }
+    .weekly-menu p { margin: 5px 0 0; color: #dbe6ff; }
+
+    @media (max-width: 920px) {
+      .partner-grid { grid-template-columns: 1fr 1fr; }
+      .quick-nav { grid-template-columns: 1fr; }
+      .shell { padding: 14px; }
+      .hero { min-height: auto; }
+    }
 
     .grid {
       display: grid;
@@ -280,9 +409,65 @@
 </head>
 <body>
   <div class="shell">
+
     <section class="hero">
       <h1>☁️ Koumatha Home Cloud Kitchen</h1>
-      <p>Daily menu • fresh home-style food • quick order with auto-location & payment options.</p>
+      <p>Online order front page with delivery partners first, then easy daily menu jump links, and weekly menu quick access — clean, readable, and customer-friendly.</p>
+    </section>
+
+    <section class="partners" id="partner-ordering">
+      <h2>Order on Delivery Apps</h2>
+      <p>Tap your preferred app logo to open Koumatha ordering.</p>
+      <div class="partner-grid">
+        <a class="partner-link" href="https://www.zomato.com" target="_blank" rel="noopener noreferrer" aria-label="Open Zomato">
+          <span class="partner-logo zomato"><img class="partner-logo-img" src="https://cdn.simpleicons.org/zomato/ffffff" alt="Zomato logo"></span>
+          <span class="partner-name">Zomato</span>
+        </a>
+        <a class="partner-link" href="https://www.swiggy.com" target="_blank" rel="noopener noreferrer" aria-label="Open Swiggy">
+          <span class="partner-logo swiggy"><img class="partner-logo-img" src="https://cdn.simpleicons.org/swiggy/ffffff" alt="Swiggy logo"></span>
+          <span class="partner-name">Swiggy</span>
+        </a>
+        <a class="partner-link" href="https://www.ubereats.com" target="_blank" rel="noopener noreferrer" aria-label="Open Uber Eats">
+          <span class="partner-logo ubereats"><img class="partner-logo-img" src="https://cdn.simpleicons.org/ubereats/ffffff" alt="Uber Eats logo"></span>
+          <span class="partner-name">Uber Eats</span>
+        </a>
+        <a class="partner-link" href="https://www.eatsure.com" target="_blank" rel="noopener noreferrer" aria-label="Open EatSure">
+          <span class="partner-logo eatsure"><img class="partner-logo-img" src="https://cdn.simpleicons.org/justeat/ffffff" alt="EatSure logo"></span>
+          <span class="partner-name">EatSure</span>
+        </a>
+      </div>
+      <div class="quick-nav">
+        <div class="quick-card">
+          <h4>Daily Menu Link / Dropdown</h4>
+          <p>Choose any daily menu section from this dropdown.</p>
+          <label for="dailyMenuDropdown">
+            Daily Menu Sections
+            <select id="dailyMenuDropdown">
+              <option value="">Select daily menu category</option>
+            </select>
+          </label>
+        </div>
+        <div class="quick-card">
+          <h4>Weekly Menu Link / Dropdown</h4>
+          <p>Open weekly page or jump to specific day sections.</p>
+          <label for="weeklyMenuDropdown">
+            Weekly Menu Options
+            <select id="weeklyMenuDropdown">
+              <option value="">Select weekly menu destination</option>
+              <option value="weekly-menu.html">Open weekly menu page</option>
+              <option value="https://github.com/your-org/weekly-menu-repo">Weekly menu repo link (replace with your URL)</option>
+            </select>
+          </label>
+        </div>
+      </div>
+    </section>
+
+    <section class="weekly-menu" id="weekly-menu-link">
+      <div>
+        <h3>Weekly Menu Page</h3>
+        <p>Want full 7-day rotation? Open our separate weekly menu page.</p>
+      </div>
+      <a class="btn" href="weekly-menu.html">Open Weekly Menu</a>
     </section>
 
     <div class="grid" id="pageGrid">
@@ -482,11 +667,16 @@
 
     const menuRoot = document.getElementById('menuRoot');
 
+    function toSectionId(sectionName) {
+      return `menu-${sectionName.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+    }
+
     function buildMenu() {
       menuRoot.innerHTML = '';
       Object.entries(MENU).forEach(([section, items]) => {
         const details = document.createElement('details');
         details.open = true;
+        details.id = toSectionId(section);
         const summary = document.createElement('summary');
         summary.textContent = section + ' (Daily Menu)';
         details.appendChild(summary);
@@ -755,11 +945,54 @@
       buildMenu();
       ensureMenuVisible();
       updateTotals();
+      const dailyMenuDropdown = document.getElementById('dailyMenuDropdown');
+      Object.keys(MENU).forEach(section => {
+        const option = document.createElement('option');
+        option.value = `#${toSectionId(section)}`;
+        option.textContent = section;
+        dailyMenuDropdown.appendChild(option);
+      });
+      [
+        ['Monday', 'weekly-menu.html#monday'],
+        ['Tuesday', 'weekly-menu.html#tuesday'],
+        ['Wednesday', 'weekly-menu.html#wednesday'],
+        ['Thursday', 'weekly-menu.html#thursday'],
+        ['Friday', 'weekly-menu.html#friday'],
+        ['Saturday', 'weekly-menu.html#saturday'],
+        ['Sunday', 'weekly-menu.html#sunday']
+      ].forEach(([day, href]) => {
+        const option = document.createElement('option');
+        option.value = href;
+        option.textContent = `${day} weekly menu`;
+        document.getElementById('weeklyMenuDropdown').appendChild(option);
+      });
 
       document.getElementById('budget').addEventListener('input', updateTotals);
       document.getElementById('search').addEventListener('input', applyFilters);
       document.getElementById('selectedOnly').addEventListener('change', applyFilters);
       setTimeout(() => ensureMenuVisible(), 250);
+
+      document.getElementById('weeklyMenuDropdown').addEventListener('change', (e) => {
+        const target = e.target.value;
+        if (!target) return;
+        if (target.startsWith('http')) {
+          window.open(target, '_blank', 'noopener,noreferrer');
+        } else {
+          window.location.href = target;
+        }
+        e.target.value = '';
+      });
+
+      document.getElementById('dailyMenuDropdown').addEventListener('change', (e) => {
+        const target = e.target.value;
+        if (!target) return;
+        if (target.startsWith('#')) {
+          document.querySelector(target)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else {
+          window.location.href = target;
+        }
+        e.target.value = '';
+      });
 
       document.getElementById('useCurrentLocation').addEventListener('click', autoFillCurrentLocation);
       document.getElementById('chooseOnMap').addEventListener('click', openMap);
