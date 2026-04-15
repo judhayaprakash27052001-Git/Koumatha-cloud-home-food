@@ -3,32 +3,35 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Koumatha Cloud Kitchen | Premium Food Hub</title>
+  <title>Koumatha Cloud Kitchen | Instant Food Access</title>
   <style>
     :root {
-      --bg-cream: #fff8ef;
-      --surface: rgba(255, 255, 255, 0.92);
-      --surface-2: #ffffff;
-      --text: #2d1a0f;
-      --muted: #7a5a47;
-      --primary: #e85820;
-      --primary-dark: #bf3f10;
-      --secondary: #f6a100;
+      --bg: #fff8ef;
+      --bg-soft: #fff2e0;
+      --card: rgba(255, 255, 255, 0.92);
+      --text: #2c1b12;
+      --muted: #7d5d4d;
+      --primary: #e85b25;
+      --primary-dark: #bc3f11;
+      --accent: #f2a316;
       --leaf: #2f9e44;
-      --shadow-soft: 0 14px 30px rgba(160, 82, 45, 0.15);
-      --shadow-strong: 0 20px 42px rgba(167, 78, 33, 0.22);
-      --radius-xl: 28px;
+      --danger: #e03131;
+      --radius-xl: 26px;
       --radius-lg: 18px;
-      --radius-md: 12px;
-      --speed: 280ms ease;
+      --shadow: 0 14px 35px rgba(173, 90, 48, 0.18);
+      --trans: 240ms ease;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
-
     body {
-      font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+      font-family: Inter, "Segoe UI", sans-serif;
       color: var(--text);
+      background:
+        radial-gradient(circle at 8% 15%, #ffd4b6, transparent 34%),
+        radial-gradient(circle at 92% 0%, #ffe7ad, transparent 30%),
+        linear-gradient(140deg, var(--bg), var(--bg-soft));
+      overflow-x: hidden;
       min-height: 100vh;
       overflow-x: hidden;
       background:
@@ -37,178 +40,180 @@
         linear-gradient(140deg, var(--bg-cream), #fff1e1);
     }
 
-    .background-layer,
-    .floating-foods,
-    .wave-bg {
+    .bg-pattern, .bg-orb {
       position: fixed;
       inset: 0;
-      z-index: -1;
       pointer-events: none;
+      z-index: -1;
     }
 
-    .background-layer {
-      opacity: .07;
+    .bg-pattern {
+      opacity: .06;
       background-image:
         radial-gradient(circle, #d97706 2px, transparent 2px),
         radial-gradient(circle, #dc2626 2px, transparent 2px),
         radial-gradient(circle, #16a34a 2px, transparent 2px);
-      background-size: 76px 76px, 116px 116px, 96px 96px;
-      animation: panPattern 22s linear infinite;
+      background-size: 70px 70px, 110px 110px, 96px 96px;
+      animation: drift 18s linear infinite;
     }
 
-    .wave-bg::before,
-    .wave-bg::after {
+    .bg-orb::before,
+    .bg-orb::after {
       content: "";
       position: absolute;
-      width: 120vw;
-      height: 220px;
-      left: -10vw;
       border-radius: 50%;
-      background: linear-gradient(120deg, rgba(232, 88, 32, .12), rgba(246, 161, 0, .05));
       filter: blur(8px);
-      animation: waveMove 10s ease-in-out infinite alternate;
+      background: linear-gradient(130deg, rgba(232, 91, 37, .15), rgba(242, 163, 22, .08));
+      animation: orbit 12s ease-in-out infinite alternate;
     }
+    .bg-orb::before { width: 60vw; height: 180px; left: -8vw; top: -110px; }
+    .bg-orb::after { width: 70vw; height: 180px; right: -20vw; bottom: -130px; animation-duration: 14s; }
 
-    .wave-bg::before { bottom: -120px; }
-    .wave-bg::after { top: -170px; animation-duration: 13s; }
+    @keyframes drift { from { transform: translateY(0); } to { transform: translateY(-34px); } }
+    @keyframes orbit { from { transform: translateX(-2%) scale(1); } to { transform: translateX(2%) scale(1.05); } }
+    @keyframes softPop { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
 
-    @keyframes panPattern { from { transform: translateY(0px); } to { transform: translateY(-44px); } }
-    @keyframes waveMove { from { transform: translateX(-2%) scale(1); } to { transform: translateX(2%) scale(1.04); } }
-
-    .floating-foods span {
-      position: absolute;
-      font-size: clamp(1rem, 2vw, 1.3rem);
-      opacity: .24;
-      animation: floatUp linear infinite;
-    }
-    .floating-foods span:nth-child(1) { left: 8%; bottom: -30px; animation-duration: 19s; }
-    .floating-foods span:nth-child(2) { left: 26%; bottom: -42px; animation-duration: 16s; }
-    .floating-foods span:nth-child(3) { left: 47%; bottom: -20px; animation-duration: 18s; }
-    .floating-foods span:nth-child(4) { left: 70%; bottom: -34px; animation-duration: 15s; }
-    .floating-foods span:nth-child(5) { left: 90%; bottom: -40px; animation-duration: 17s; }
-    @keyframes floatUp { from { transform: translateY(0) rotate(0); } to { transform: translateY(-110vh) rotate(18deg); } }
-
-    .container { max-width: 1180px; margin: 0 auto; padding: 0 20px; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 18px; }
 
     .header {
       position: sticky;
       top: 0;
-      z-index: 30;
-      border-bottom: 1px solid rgba(232, 88, 32, .16);
-      background: rgba(255, 248, 239, .84);
+      z-index: 40;
       backdrop-filter: blur(12px);
+      background: rgba(255, 248, 239, .88);
+      border-bottom: 1px solid rgba(232, 91, 37, .16);
     }
 
     .nav {
-      min-height: 80px;
+      min-height: 82px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 14px;
+      gap: 12px;
       flex-wrap: wrap;
     }
 
-    .brand { display: flex; align-items: center; gap: 11px; text-decoration: none; color: inherit; }
-    .logo-image {
-      width: 58px;
-      height: 58px;
-      border-radius: 50%;
-      object-fit: cover;
-      box-shadow: var(--shadow-soft);
-      border: 2px solid rgba(104, 126, 34, 0.65);
-      background: #faf7de;
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: inherit;
+      text-decoration: none;
     }
 
-    .brand h1 { font-size: 1.08rem; line-height: 1.15; }
-    .brand small { color: var(--muted); font-size: .78rem; }
+    .brand img {
+      width: 62px;
+      height: 62px;
+      border-radius: 50%;
+      border: 2px solid rgba(111, 127, 45, .7);
+      background: #fbf6dc;
+      box-shadow: var(--shadow);
+      animation: softPop 2.8s ease-in-out infinite;
+    }
 
-    .nav-links { display: flex; gap: 8px; flex-wrap: wrap; }
+    .brand h1 { font-size: 1.1rem; line-height: 1.1; }
+    .brand small { color: var(--muted); font-weight: 600; }
+
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
     .nav-links a {
       text-decoration: none;
       color: var(--text);
-      font-weight: 650;
-      padding: 8px 14px;
+      font-weight: 700;
+      font-size: .9rem;
+      padding: 8px 13px;
       border-radius: 999px;
-      transition: var(--speed);
+      transition: var(--trans);
     }
-    .nav-links a:hover,
-    .nav-links a:focus-visible {
+
+    .nav-links a:hover, .nav-links a:focus-visible {
       background: var(--primary);
       color: #fff;
       outline: none;
     }
 
     .hero {
-      padding: 54px 0 26px;
+      padding: 48px 0 24px;
       display: grid;
-      grid-template-columns: 1.06fr .94fr;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 22px;
       align-items: center;
-      gap: 24px;
     }
 
     .pill {
       display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: #ffe2cf;
+      background: #ffe3d1;
       color: var(--primary-dark);
       padding: 8px 12px;
       border-radius: 999px;
       font-size: .82rem;
-      font-weight: 700;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .hero h2 {
+      font-size: clamp(2rem, 4.4vw, 3.5rem);
+      line-height: 1.06;
       margin-bottom: 12px;
     }
-
-    .hero h2 { font-size: clamp(2rem, 4.4vw, 3.5rem); line-height: 1.08; margin-bottom: 14px; }
     .hero h2 span { color: var(--primary); }
-    .hero p { color: var(--muted); line-height: 1.72; max-width: 56ch; }
+    .hero p { color: var(--muted); line-height: 1.7; max-width: 58ch; }
 
-    .hero-btns { margin-top: 22px; display: flex; gap: 11px; flex-wrap: wrap; }
-
-    .btn {
-      text-decoration: none;
-      font-weight: 750;
-      padding: 11px 17px;
-      border-radius: 12px;
-      border: 1px solid transparent;
-      transition: var(--speed);
-      display: inline-block;
-      cursor: pointer;
+    .quick-actions {
+      margin-top: 18px;
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .btn-primary { background: linear-gradient(130deg, var(--primary), #ff7a46); color: #fff; box-shadow: var(--shadow-soft); }
-    .btn-secondary { background: rgba(255,255,255,.8); border-color: rgba(232,88,32,.24); color: var(--primary-dark); }
-    .btn:hover { transform: translateY(-2px); }
-
-    .hero-panel {
-      background: var(--surface);
-      border: 1px solid rgba(232,88,32,.22);
-      border-radius: var(--radius-xl);
-      box-shadow: var(--shadow-strong);
-      padding: 20px;
-    }
-
-    .hero-panel h3 { font-size: .95rem; color: var(--muted); margin-bottom: 12px; }
-
-    .partners-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-
-    .partner-card {
-      background: var(--surface-2);
-      border: 1px solid rgba(0,0,0,.08);
+    .action {
+      background: var(--card);
+      border: 1px solid rgba(232, 91, 37, .18);
       border-radius: 14px;
+      padding: 12px;
       text-decoration: none;
       color: inherit;
-      padding: 12px 10px;
+      box-shadow: var(--shadow);
+      transition: var(--trans);
+    }
+
+    .action:hover { transform: translateY(-3px); }
+    .action strong { display: block; margin-bottom: 4px; }
+    .action span { color: var(--muted); font-size: .86rem; }
+
+    .partner-panel {
+      background: var(--card);
+      border: 1px solid rgba(232, 91, 37, .2);
+      border-radius: var(--radius-xl);
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .partner-panel h3 { color: var(--muted); margin-bottom: 12px; }
+    .partners-grid { display: grid; gap: 10px; grid-template-columns: 1fr 1fr; }
+
+    .partner {
       display: flex;
       align-items: center;
       gap: 10px;
-      min-height: 62px;
-      transition: var(--speed);
+      border: 1px solid rgba(0,0,0,.08);
+      background: #fff;
+      border-radius: 12px;
+      min-height: 60px;
+      padding: 10px;
+      text-decoration: none;
+      color: inherit;
+      transition: var(--trans);
     }
 
-    .partner-card:hover { transform: translateY(-3px); border-color: rgba(232,88,32,.35); }
+    .partner:hover { transform: translateY(-2px); border-color: rgba(232, 91, 37, .32); }
 
-    .brand-badge {
+    .dot {
       width: 34px;
       height: 34px;
       border-radius: 10px;
@@ -216,153 +221,198 @@
       place-items: center;
       color: #fff;
       font-weight: 800;
-      font-size: .95rem;
       flex-shrink: 0;
     }
 
-    .zomato { background: linear-gradient(145deg, #ef4f5f, #d7263d); }
-    .swiggy { background: linear-gradient(145deg, #fc8019, #e76f00); }
-    .ubereats { background: linear-gradient(145deg, #1f1f1f, #3a3a3a); }
-    .doordash { background: linear-gradient(145deg, #ff3008, #db1f00); }
+    .z { background: linear-gradient(145deg, #ef4f5f, #d7263d); }
+    .s { background: linear-gradient(145deg, #fc8019, #e76f00); }
+    .u { background: linear-gradient(145deg, #262626, #3b3b3b); }
+    .d { background: linear-gradient(145deg, #ff3008, #d91d00); }
 
-    .partner-meta strong { display: block; font-size: .94rem; }
-    .partner-meta span { color: var(--muted); font-size: .78rem; }
+    .partner b { display: block; font-size: .92rem; }
+    .partner small { color: var(--muted); }
 
-    .ticker {
-      margin: 18px 0 8px;
-      background: #fff2e5;
-      border: 1px dashed rgba(232,88,32,.35);
-      border-radius: 999px;
-      overflow: hidden;
-      white-space: nowrap;
-    }
-
-    .ticker-track {
-      display: inline-block;
-      padding: 10px 0;
-      animation: ticker 18s linear infinite;
-      font-size: .88rem;
-      color: #8b4f33;
-      font-weight: 700;
-    }
-
-    @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-
-    .features {
-      padding: 22px 0;
+    .signal-row {
+      margin: 20px 0;
       display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .signal {
+      background: var(--card);
+      border: 1px solid rgba(232, 91, 37, .16);
+      border-radius: 14px;
+      padding: 12px;
+      box-shadow: var(--shadow);
+      animation: softPop 5s ease-in-out infinite;
+    }
+
+    .signal h4 { font-size: .95rem; margin-bottom: 6px; }
+    .signal p { font-size: .84rem; color: var(--muted); line-height: 1.45; }
+
+    .core-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 14px;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      margin-bottom: 22px;
     }
 
-    .feature {
-      background: var(--surface);
-      border: 1px solid rgba(232,88,32,.17);
-      border-radius: var(--radius-md);
-      box-shadow: var(--shadow-soft);
-      padding: 14px;
-    }
-
-    .feature h4 { margin-bottom: 7px; }
-    .feature p { color: var(--muted); font-size: .9rem; line-height: 1.55; }
-
-    .core-links {
-      padding: 16px 0 20px;
-      display: grid;
-      gap: 16px;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
-
-    .core-card {
-      background: var(--surface);
-      border: 1px solid rgba(232,88,32,.16);
+    .card {
+      background: var(--card);
+      border: 1px solid rgba(232, 91, 37, .16);
       border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-soft);
-      padding: 20px;
+      padding: 18px;
+      box-shadow: var(--shadow);
       position: relative;
       overflow: hidden;
-      transition: var(--speed);
     }
 
-    .core-card::before {
+    .card::before {
       content: "";
       position: absolute;
       inset: 0;
-      background: linear-gradient(120deg, rgba(232,88,32,.09), transparent 42%);
+      background: linear-gradient(110deg, rgba(232, 91, 37, .08), transparent 40%);
       pointer-events: none;
     }
 
-    .core-card:hover { transform: translateY(-4px); }
-    .core-card h3 { margin-bottom: 8px; font-size: 1.12rem; }
-    .core-card p { color: var(--muted); line-height: 1.55; margin-bottom: 14px; font-size: .92rem; }
-    .core-card a, .core-card button { text-decoration: none; color: var(--primary-dark); font-weight: 700; background: none; border: none; padding: 0; }
+    .card h3 { margin-bottom: 7px; font-size: 1.05rem; }
+    .card p { color: var(--muted); line-height: 1.5; font-size: .9rem; margin-bottom: 12px; }
+    .card a, .card button {
+      text-decoration: none;
+      font-weight: 800;
+      color: var(--primary-dark);
+      border: none;
+      background: none;
+      padding: 0;
+      cursor: pointer;
+    }
 
-    .help-box {
-      margin-bottom: 54px;
-      background: linear-gradient(120deg, #fff 0%, #fff5ea 100%);
-      border-radius: var(--radius-xl);
-      border: 1px solid rgba(232,88,32,.22);
-      box-shadow: var(--shadow-strong);
-      padding: 24px;
+    .help-wrap {
+      margin-bottom: 70px;
       display: grid;
-      gap: 18px;
-      grid-template-columns: 1.2fr .8fr;
-      align-items: center;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 14px;
     }
 
-    .check-list { list-style: none; display: grid; gap: 10px; color: var(--muted); }
-    .check-list li::before { content: "✔"; color: var(--leaf); font-weight: 800; margin-right: 8px; }
-
-    .support-panel {
+    .help-card, .faq-card {
       background: #fff;
-      border: 1px dashed rgba(232,88,32,.3);
-      border-radius: 16px;
-      padding: 16px;
-      text-align: center;
+      border: 1px solid rgba(232, 91, 37, .2);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      padding: 20px;
     }
 
-    .contact-links { display: grid; gap: 10px; margin-top: 10px; }
-    .contact-links a { color: var(--primary-dark); font-weight: 700; text-decoration: none; }
+    .help-list { list-style: none; display: grid; gap: 8px; color: var(--muted); }
+    .help-list li::before { content: "✔"; color: var(--leaf); margin-right: 8px; font-weight: 800; }
+
+    .quick-contact {
+      margin-top: 10px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .quick-contact a {
+      color: var(--primary-dark);
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    details {
+      border: 1px solid rgba(232, 91, 37, .15);
+      border-radius: 12px;
+      padding: 10px;
+      margin-top: 8px;
+      background: #fffaf3;
+    }
+
+    summary { cursor: pointer; font-weight: 700; }
+    details p { color: var(--muted); margin-top: 8px; }
 
     .modal {
       position: fixed;
       inset: 0;
-      background: rgba(24, 10, 2, 0.62);
+      background: rgba(26, 10, 2, .62);
       display: none;
       align-items: center;
       justify-content: center;
-      padding: 20px;
       z-index: 90;
+      padding: 16px;
     }
     .modal.open { display: flex; }
+
     .modal-box {
-      width: min(520px, 100%);
+      width: min(500px, 100%);
       background: #fff;
       border-radius: 18px;
+      border: 1px solid rgba(232, 91, 37, .25);
+      box-shadow: var(--shadow);
       padding: 20px;
-      box-shadow: var(--shadow-strong);
-      border: 1px solid rgba(232,88,32,.2);
+    }
+
+    .button {
+      margin-top: 12px;
+      padding: 9px 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(232, 91, 37, .28);
+      background: #fff6ec;
+      color: var(--primary-dark);
+      font-weight: 700;
+      cursor: pointer;
     }
     .modal-box h3 { margin-bottom: 8px; }
     .modal-box p { color: var(--muted); line-height: 1.55; margin-bottom: 10px; }
 
-    footer { padding: 22px 0 38px; text-align: center; color: var(--muted); font-size: .9rem; }
-
-    @media (max-width: 1080px) {
-      .core-links { grid-template-columns: 1fr 1fr; }
+    .sticky-mobile {
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 10px;
+      width: min(96%, 560px);
+      background: rgba(255, 255, 255, .96);
+      border: 1px solid rgba(232, 91, 37, .2);
+      box-shadow: var(--shadow);
+      border-radius: 14px;
+      padding: 8px;
+      display: none;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      z-index: 80;
     }
 
-    @media (max-width: 980px) {
-      .hero, .help-box { grid-template-columns: 1fr; }
-      .features { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .sticky-mobile a, .sticky-mobile button {
+      text-decoration: none;
+      border: none;
+      background: #fff3e4;
+      border-radius: 10px;
+      color: var(--primary-dark);
+      font-weight: 800;
+      font-size: .8rem;
+      padding: 10px 6px;
+      text-align: center;
+    }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      padding: 14px 0 96px;
+      font-size: .88rem;
+    }
+
+    @media (max-width: 1100px) {
+      .signal-row, .core-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 900px) {
+      .hero, .help-wrap { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 640px) {
-      .partners-grid, .features, .core-links { grid-template-columns: 1fr; }
-      .hero { padding-top: 36px; }
+      .partners-grid, .signal-row, .core-grid, .quick-actions { grid-template-columns: 1fr; }
       .nav { justify-content: center; }
       .brand { width: 100%; justify-content: center; }
       .nav-links { justify-content: center; }
+      .sticky-mobile { display: grid; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -372,28 +422,24 @@
   </style>
 </head>
 <body>
-  <div class="background-layer" aria-hidden="true"></div>
-  <div class="wave-bg" aria-hidden="true"></div>
-  <div class="floating-foods" aria-hidden="true">
-    <span>🍔</span><span>🍕</span><span>🥗</span><span>🍜</span><span>🌮</span>
-  </div>
+  <div class="bg-pattern" aria-hidden="true"></div>
+  <div class="bg-orb" aria-hidden="true"></div>
 
   <header class="header">
     <div class="container nav">
       <a href="#home" class="brand">
-        <img src="assets/koumatha-logo.svg" alt="Koumatha Cloud Home Kitchen logo" class="logo-image" />
+        <img src="assets/koumatha-logo.svg" alt="Koumatha Cloud Home Kitchen logo" />
         <div>
           <h1>Koumatha Cloud Kitchen</h1>
-          <small>Smart Food Partner Experience</small>
+          <small>Instant access food dashboard</small>
         </div>
       </a>
-
       <nav class="nav-links" aria-label="Main navigation">
-        <a href="#partners">Food Partners</a>
-        <a href="#weekly">Weekly Menu</a>
-        <a href="#daily">Daily Menu</a>
-        <a href="#party">Party & Family</a>
-        <a href="#help">Help App</a>
+        <a href="#partners">Partners</a>
+        <a href="#weekly">Weekly</a>
+        <a href="#daily">Daily</a>
+        <a href="#party">Party/Family</a>
+        <a href="#help">Help</a>
       </nav>
     </div>
   </header>
@@ -401,37 +447,17 @@
   <main id="home" class="container">
     <section class="hero" aria-labelledby="hero-title">
       <div>
-        <div class="pill">⭐ Premium UI/UX Food Website Upgrade</div>
-        <h2 id="hero-title">More attractive, smooth and <span>professional food design</span>.</h2>
+        <div class="pill">✨ Redesigned: faster, clearer, animated</div>
+        <h2 id="hero-title">Everything customer needs <span>immediately</span>.</h2>
         <p>
-          Enhanced visual hierarchy, richer animation, stronger mobile responsiveness, and quick routes to partners,
-          daily menu, weekly menu, party orders, and direct help channels (phone/email/app support).
+          Quick access blocks, bright readable UI, stronger mobile experience, and one-tap routes to menus, partner apps,
+          party orders, and urgent support contacts.
         </p>
-        <div class="hero-btns">
-          <a class="btn btn-primary" href="#partners">Explore Food Partners</a>
-          <a class="btn btn-secondary" href="party-family-order.html">Party / Family Orders</a>
-        </div>
-      </div>
-
-      <aside class="hero-panel" id="partners">
-        <h3>Popular Food Partner Links</h3>
-        <div class="partners-grid">
-          <a class="partner-card" href="https://www.zomato.com" target="_blank" rel="noreferrer noopener">
-            <span class="brand-badge zomato">Z</span>
-            <span class="partner-meta"><strong>Zomato</strong><span>Order on Zomato</span></span>
-          </a>
-          <a class="partner-card" href="https://www.swiggy.com" target="_blank" rel="noreferrer noopener">
-            <span class="brand-badge swiggy">S</span>
-            <span class="partner-meta"><strong>Swiggy</strong><span>Fast doorstep delivery</span></span>
-          </a>
-          <a class="partner-card" href="https://www.ubereats.com" target="_blank" rel="noreferrer noopener">
-            <span class="brand-badge ubereats">U</span>
-            <span class="partner-meta"><strong>Uber Eats</strong><span>Track live order status</span></span>
-          </a>
-          <a class="partner-card" href="https://www.doordash.com" target="_blank" rel="noreferrer noopener">
-            <span class="brand-badge doordash">D</span>
-            <span class="partner-meta"><strong>DoorDash</strong><span>Quick meal delivery</span></span>
-          </a>
+        <div class="quick-actions" aria-label="Immediate access shortcuts">
+          <a class="action" href="#weekly"><strong>Weekly Menu</strong><span>See this week in one tap</span></a>
+          <a class="action" href="#daily"><strong>Daily Menu</strong><span>Today specials & fresh meals</span></a>
+          <a class="action" href="party-family-order.html"><strong>Party Booking</strong><span>Function order page</span></a>
+          <button class="action" type="button" id="openHelpTop"><strong>Need Help Now?</strong><span>Call, email, WhatsApp</span></button>
         </div>
       </aside>
     </section>
@@ -440,83 +466,112 @@
       <div class="ticker-track">
         🔥 Free delivery on first order • 🥗 Healthy combo discounts • 🍕 Weekend family packs • ☕ Breakfast 20% off • 🎉 Party catering specials • 🔥 Free delivery on first order •
       </div>
+      <aside class="partner-panel" id="partners">
+        <h3>Food Partner Channels</h3>
+        <div class="partners-grid">
+          <a class="partner" href="https://www.zomato.com" target="_blank" rel="noreferrer noopener"><span class="dot z">Z</span><span><b>Zomato</b><small>Order now</small></span></a>
+          <a class="partner" href="https://www.swiggy.com" target="_blank" rel="noreferrer noopener"><span class="dot s">S</span><span><b>Swiggy</b><small>Fast delivery</small></span></a>
+          <a class="partner" href="https://www.ubereats.com" target="_blank" rel="noreferrer noopener"><span class="dot u">U</span><span><b>Uber Eats</b><small>Live tracking</small></span></a>
+          <a class="partner" href="https://www.doordash.com" target="_blank" rel="noreferrer noopener"><span class="dot d">D</span><span><b>DoorDash</b><small>Express orders</small></span></a>
+        </div>
+      </aside>
     </section>
 
-    <section class="features" aria-label="Enhanced feature highlights">
-      <article class="feature"><h4>Smart Recommendations</h4><p>Suggest meals by time, taste, and customer order behavior.</p></article>
-      <article class="feature"><h4>Fast Reorder</h4><p>One-click reorder for previous meals with improved conversion flow.</p></article>
-      <article class="feature"><h4>Live Prep Updates</h4><p>Customers can view preparation stage and expected delivery timeline.</p></article>
-      <article class="feature"><h4>Diet Filters</h4><p>Veg, keto, low-calorie, spicy-level filters for better menu discovery.</p></article>
+    <section class="signal-row" aria-label="Service highlights">
+      <article class="signal"><h4>⚡ One-Tap Order Flow</h4><p>No clutter, direct links to top tasks customers ask first.</p></article>
+      <article class="signal"><h4>📞 Instant Support</h4><p>Call and WhatsApp routes are exposed in visible action cards.</p></article>
+      <article class="signal"><h4>🎉 Event Catering</h4><p>Dedicated family and party page for bulk bookings.</p></article>
+      <article class="signal"><h4>📱 Mobile Friendly</h4><p>Sticky mobile action bar helps users access key tasks quickly.</p></article>
     </section>
 
-    <section class="core-links" aria-label="Core page links">
-      <article class="core-card" id="weekly">
+    <section class="core-grid" aria-label="Core links">
+      <article class="card" id="weekly">
         <h3>Weekly Menus</h3>
-        <p>Organized 7-day meal plan with breakfast, lunch, dinner and chef specials for easy planning.</p>
-        <a href="#">Open weekly menu link →</a>
+        <p>Plan full-week breakfast/lunch/dinner with chef combo selections.</p>
+        <a href="#">Open weekly menu →</a>
       </article>
-      <article class="core-card" id="daily">
+      <article class="card" id="daily">
         <h3>Daily Menus</h3>
-        <p>Fresh daily list with category sections, prices, and quick order-ready indicators.</p>
-        <a href="#">Open daily menu link →</a>
+        <p>Fresh daily menu with categories and fast order entry points.</p>
+        <a href="#">Open daily menu →</a>
       </article>
-      <article class="core-card" id="party">
-        <h3>Party & Family Function Orders</h3>
-        <p>Bulk meal orders for birthdays, pooja, office lunches, and family events with custom package options.</p>
+      <article class="card" id="party">
+        <h3>Party & Family Function</h3>
+        <p>Custom bulk meal packages for birthdays, pooja, office, and events.</p>
         <a href="party-family-order.html">Open party/family order page →</a>
       </article>
-      <article class="core-card" id="help">
-        <h3>Help with App</h3>
-        <p>Tap to open fast support actions including call, email, and help center assistance.</p>
-        <button id="openHelpModal" type="button">Open help support panel →</button>
+      <article class="card" id="help">
+        <h3>Help App</h3>
+        <p>Users can instantly contact support if anything is unclear.</p>
+        <button type="button" id="openHelpCard">Open help contacts →</button>
       </article>
     </section>
 
-    <section class="help-box" id="support" aria-label="Help and support section">
-      <div>
-        <h3 style="margin-bottom:8px;">Help App Features</h3>
-        <ul class="check-list">
-          <li>24/7 chatbot for order, refund, and cancellation support.</li>
-          <li>Simple guided flows to solve app login and payment issues.</li>
-          <li>One-tap call and email actions for urgent customer support.</li>
-          <li>FAQ modules with clean UX and smooth section navigation.</li>
+    <section class="help-wrap">
+      <article class="help-card">
+        <h3>Customer Help Center</h3>
+        <ul class="help-list" style="margin-top: 10px;">
+          <li>Track order, delay, cancel, and refund in one place.</li>
+          <li>App login and payment error guidance.</li>
+          <li>Escalation contact for urgent delivery problems.</li>
+          <li>Support response channels active every day.</li>
         </ul>
-      </div>
-      <div class="support-panel">
-        <p><strong>Need instant help?</strong></p>
-        <div class="contact-links">
-          <a href="tel:+919876543210">📞 +91 98765 43210</a>
+        <div class="quick-contact">
+          <a href="tel:+919876543210">📞 Help Line: +91 98765 43210</a>
           <a href="mailto:support@koumathafoods.com">✉ support@koumathafoods.com</a>
-          <a href="#help" id="openHelpFromPanel">💬 Open Help App Panel</a>
+          <a href="https://wa.me/919876543210" target="_blank" rel="noreferrer noopener">💬 WhatsApp Support</a>
         </div>
-      </div>
+      </article>
+      <article class="faq-card">
+        <h3>Quick FAQ</h3>
+        <details open>
+          <summary>How can I place urgent order?</summary>
+          <p>Use Daily Menu or partner app cards above; these are fastest routes.</p>
+        </details>
+        <details>
+          <summary>How do I book party/family order?</summary>
+          <p>Open Party & Family card to go to event booking page and call event numbers.</p>
+        </details>
+        <details>
+          <summary>How to contact help immediately?</summary>
+          <p>Tap any "Open help contacts" button to launch support modal instantly.</p>
+        </details>
+      </article>
     </section>
   </main>
 
-  <div class="modal" id="helpModal" aria-hidden="true" role="dialog" aria-labelledby="helpTitle">
+  <div class="modal" id="helpModal" aria-hidden="true" role="dialog" aria-labelledby="helpModalTitle">
     <div class="modal-box">
-      <h3 id="helpTitle">Koumatha Help App Support</h3>
-      <p>Choose your support method:</p>
-      <div class="contact-links">
-        <a href="tel:+919876543210">📞 Call Help Desk: +91 98765 43210</a>
-        <a href="mailto:support@koumathafoods.com">✉ Email: support@koumathafoods.com</a>
-        <a href="https://wa.me/919876543210" target="_blank" rel="noreferrer noopener">💬 WhatsApp Support</a>
+      <h3 id="helpModalTitle">Immediate Help Contacts</h3>
+      <p style="color: var(--muted); margin-top: 8px;">Choose how you want support right now:</p>
+      <div class="quick-contact">
+        <a href="tel:+919876543210">📞 Call +91 98765 43210</a>
+        <a href="tel:+919812345678">📞 Call +91 98123 45678</a>
+        <a href="mailto:support@koumathafoods.com">✉ support@koumathafoods.com</a>
+        <a href="https://wa.me/919876543210" target="_blank" rel="noreferrer noopener">💬 Start WhatsApp chat</a>
       </div>
-      <button class="btn btn-secondary" type="button" id="closeHelpModal" style="margin-top:14px;">Close</button>
+      <button class="button" id="closeHelpModal" type="button">Close</button>
     </div>
   </div>
 
+  <div class="sticky-mobile" aria-label="Mobile quick actions">
+    <a href="#daily">Daily</a>
+    <a href="party-family-order.html">Party</a>
+    <button id="openHelpSticky" type="button">Help</button>
+  </div>
+
   <footer>
-    © 2026 Koumatha Cloud Kitchen • Mobile and web friendly professional food UI/UX.
+    © 2026 Koumatha Cloud Kitchen • Animated, responsive and instant-access food website.
   </footer>
 
   <script>
     const helpModal = document.getElementById('helpModal');
-    const openButtons = [
-      document.getElementById('openHelpModal'),
-      document.getElementById('openHelpFromPanel')
+    const openers = [
+      document.getElementById('openHelpTop'),
+      document.getElementById('openHelpCard'),
+      document.getElementById('openHelpSticky')
     ];
-    const closeHelpModal = document.getElementById('closeHelpModal');
+    const closeBtn = document.getElementById('closeHelpModal');
 
     function openModal(event) {
       if (event) event.preventDefault();
@@ -529,14 +584,17 @@
       helpModal.setAttribute('aria-hidden', 'true');
     }
 
-    openButtons.forEach((button) => {
-      if (button) button.addEventListener('click', openModal);
+    openers.forEach((item) => {
+      if (item) item.addEventListener('click', openModal);
     });
 
-    if (closeHelpModal) closeHelpModal.addEventListener('click', closeModal);
-    helpModal.addEventListener('click', (event) => {
-      if (event.target === helpModal) closeModal();
-    });
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
+
+    if (helpModal) {
+      helpModal.addEventListener('click', (event) => {
+        if (event.target === helpModal) closeModal();
+      });
+    }
   </script>
 </body>
 </html>
