@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" role="img" aria-labelledby="title desc">
+  <title id="title">Koumatha Cloud Home Kitchen logo</title>
+  <desc id="desc">Ornamental round logo with rice pot illustration and brand text</desc>
+  <defs>
+    <linearGradient id="outerRing" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#5f7118"/>
+      <stop offset="1" stop-color="#32450f"/>
+    </linearGradient>
+    <linearGradient id="innerBg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fffce8"/>
+      <stop offset="1" stop-color="#f4ecc6"/>
+    </linearGradient>
+    <linearGradient id="potGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#d26a1b"/>
+      <stop offset="1" stop-color="#9a3f0f"/>
+    </linearGradient>
+  </defs>
+  <circle cx="160" cy="160" r="154" fill="url(#outerRing)"/>
+  <circle cx="160" cy="160" r="132" fill="#b6c467"/>
+  <circle cx="160" cy="160" r="122" fill="url(#innerBg)" stroke="#6f7f2d" stroke-width="5"/>
+  <circle cx="160" cy="170" r="62" fill="#f7f4de" stroke="#6f7f2d" stroke-width="5"/>
+
+  <ellipse cx="160" cy="178" rx="48" ry="32" fill="url(#potGrad)"/>
+  <ellipse cx="160" cy="154" rx="55" ry="16" fill="#be5f18"/>
+  <ellipse cx="160" cy="152" rx="43" ry="10" fill="#f7d65f"/>
+  <circle cx="137" cy="149" r="5" fill="#654321"/>
+  <circle cx="159" cy="146" r="4" fill="#5a3922"/>
+  <circle cx="181" cy="151" r="5" fill="#6a3a1f"/>
+  <path d="M126 130 C142 117 178 117 194 130" fill="none" stroke="#7da126" stroke-width="6" stroke-linecap="round"/>
+  <path d="M170 120 l20 -10" stroke="#7da126" stroke-width="5" stroke-linecap="round"/>
+
+  <text x="160" y="92" text-anchor="middle" font-size="34" font-family="Georgia, serif" font-weight="700" fill="#1d2b0d">KOUMATHA CLOUD</text>
+  <text x="160" y="258" text-anchor="middle" font-size="34" font-family="Georgia, serif" font-weight="700" fill="#1d2b0d">HOME KITCHEN</text>
+</svg>
