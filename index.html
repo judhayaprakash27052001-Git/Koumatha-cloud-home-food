@@ -3,92 +3,92 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Koumatha Cloud Kitchen | Instant Food Access</title>
+  <title>Koumatha Cloud Kitchen | Menu & Partner Hub</title>
   <style>
     :root {
       --bg: #fff8ef;
-      --bg-soft: #fff2e0;
+      --bg-soft: #ffefd8;
       --card: rgba(255, 255, 255, 0.92);
-      --text: #2c1b12;
-      --muted: #7d5d4d;
-      --primary: #e85b25;
-      --primary-dark: #bc3f11;
-      --accent: #f2a316;
+      --text: #2f1f14;
+      --muted: #775748;
+      --primary: #e8612c;
+      --primary-dark: #bc4214;
+      --accent: #f7a318;
       --leaf: #2f9e44;
-      --danger: #e03131;
-      --radius-xl: 26px;
-      --radius-lg: 18px;
-      --shadow: 0 14px 35px rgba(173, 90, 48, 0.18);
+      --shadow: 0 18px 36px rgba(168, 83, 45, 0.16);
+      --radius-lg: 20px;
+      --radius-md: 14px;
       --trans: 240ms ease;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
+
     body {
       font-family: Inter, "Segoe UI", sans-serif;
       color: var(--text);
-      background:
-        radial-gradient(circle at 8% 15%, #ffd4b6, transparent 34%),
-        radial-gradient(circle at 92% 0%, #ffe7ad, transparent 30%),
-        linear-gradient(140deg, var(--bg), var(--bg-soft));
-      overflow-x: hidden;
       min-height: 100vh;
       overflow-x: hidden;
       background:
-        radial-gradient(circle at 10% 20%, #ffd6b8 0%, transparent 33%),
-        radial-gradient(circle at 90% 0%, #ffe7a9 0%, transparent 34%),
-        linear-gradient(140deg, var(--bg-cream), #fff1e1);
+        radial-gradient(circle at 10% 15%, #ffd8bc 0%, transparent 35%),
+        radial-gradient(circle at 90% 3%, #ffe8ab 0%, transparent 34%),
+        linear-gradient(140deg, var(--bg), var(--bg-soft));
     }
 
-    .bg-pattern, .bg-orb {
+    .pattern,
+    .orb {
       position: fixed;
       inset: 0;
-      pointer-events: none;
       z-index: -1;
+      pointer-events: none;
     }
 
-    .bg-pattern {
+    .pattern {
       opacity: .06;
       background-image:
         radial-gradient(circle, #d97706 2px, transparent 2px),
         radial-gradient(circle, #dc2626 2px, transparent 2px),
         radial-gradient(circle, #16a34a 2px, transparent 2px);
-      background-size: 70px 70px, 110px 110px, 96px 96px;
-      animation: drift 18s linear infinite;
+      background-size: 74px 74px, 110px 110px, 90px 90px;
+      animation: movePattern 20s linear infinite;
     }
 
-    .bg-orb::before,
-    .bg-orb::after {
+    .orb::before,
+    .orb::after {
       content: "";
       position: absolute;
-      border-radius: 50%;
+      width: 120vw;
+      height: 220px;
+      left: -10vw;
+      border-radius: 999px;
+      background: linear-gradient(130deg, rgba(232, 97, 44, .15), rgba(247, 163, 24, .08));
       filter: blur(8px);
-      background: linear-gradient(130deg, rgba(232, 91, 37, .15), rgba(242, 163, 22, .08));
-      animation: orbit 12s ease-in-out infinite alternate;
+      animation: floatWave 12s ease-in-out infinite alternate;
     }
-    .bg-orb::before { width: 60vw; height: 180px; left: -8vw; top: -110px; }
-    .bg-orb::after { width: 70vw; height: 180px; right: -20vw; bottom: -130px; animation-duration: 14s; }
 
-    @keyframes drift { from { transform: translateY(0); } to { transform: translateY(-34px); } }
-    @keyframes orbit { from { transform: translateX(-2%) scale(1); } to { transform: translateX(2%) scale(1.05); } }
-    @keyframes softPop { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+    .orb::before { top: -130px; }
+    .orb::after { bottom: -130px; animation-duration: 14s; }
 
-    .container { max-width: 1200px; margin: 0 auto; padding: 0 18px; }
+    @keyframes movePattern { from { transform: translateY(0); } to { transform: translateY(-36px); } }
+    @keyframes floatWave { from { transform: translateX(-2%); } to { transform: translateX(2%); } }
+    @keyframes lift { 0%,100%{ transform: translateY(0);} 50% { transform: translateY(-4px);} }
+
+    .container { max-width: 1180px; margin: 0 auto; padding: 0 18px; }
 
     .header {
       position: sticky;
       top: 0;
-      z-index: 40;
+      z-index: 30;
       backdrop-filter: blur(12px);
       background: rgba(255, 248, 239, .88);
-      border-bottom: 1px solid rgba(232, 91, 37, .16);
+      border-bottom: 1px solid rgba(232, 97, 44, .15);
     }
 
     .nav {
       min-height: 82px;
       display: flex;
-      align-items: center;
       justify-content: space-between;
+      align-items: center;
       gap: 12px;
       flex-wrap: wrap;
     }
@@ -97,36 +97,31 @@
       display: flex;
       align-items: center;
       gap: 12px;
-      color: inherit;
       text-decoration: none;
+      color: inherit;
     }
 
     .brand img {
-      width: 62px;
-      height: 62px;
+      width: 64px;
+      height: 64px;
       border-radius: 50%;
-      border: 2px solid rgba(111, 127, 45, .7);
+      border: 2px solid rgba(106, 125, 38, .8);
       background: #fbf6dc;
       box-shadow: var(--shadow);
-      animation: softPop 2.8s ease-in-out infinite;
+      animation: lift 3s infinite;
     }
 
     .brand h1 { font-size: 1.1rem; line-height: 1.1; }
     .brand small { color: var(--muted); font-weight: 600; }
 
-    .nav-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      align-items: center;
-    }
+    .nav-links { display: flex; gap: 8px; flex-wrap: wrap; }
 
     .nav-links a {
       text-decoration: none;
-      color: var(--text);
       font-weight: 700;
+      color: var(--text);
       font-size: .9rem;
-      padding: 8px 13px;
+      padding: 8px 14px;
       border-radius: 999px;
       transition: var(--trans);
     }
@@ -138,281 +133,217 @@
     }
 
     .hero {
-      padding: 48px 0 24px;
-      display: grid;
-      grid-template-columns: 1.1fr .9fr;
-      gap: 22px;
-      align-items: center;
+      padding: 44px 0 18px;
+      text-align: center;
     }
 
-    .pill {
+    .hero-badge {
       display: inline-flex;
-      background: #ffe3d1;
+      background: #ffe4d3;
       color: var(--primary-dark);
-      padding: 8px 12px;
       border-radius: 999px;
+      padding: 8px 12px;
       font-size: .82rem;
       font-weight: 800;
       margin-bottom: 10px;
     }
 
     .hero h2 {
-      font-size: clamp(2rem, 4.4vw, 3.5rem);
-      line-height: 1.06;
-      margin-bottom: 12px;
+      font-size: clamp(2rem, 4.4vw, 3.35rem);
+      line-height: 1.08;
+      margin-bottom: 10px;
     }
     .hero h2 span { color: var(--primary); }
     .hero p { color: var(--muted); line-height: 1.7; max-width: 58ch; }
 
-    .quick-actions {
-      margin-top: 18px;
+    .hero h2 span { color: var(--primary); }
+    .hero p { color: var(--muted); max-width: 75ch; margin: 0 auto; line-height: 1.68; }
+
+    .box-grid {
+      padding: 24px 0 20px;
       display: grid;
-      gap: 10px;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
     }
 
-    .action {
+    .box {
       background: var(--card);
-      border: 1px solid rgba(232, 91, 37, .18);
-      border-radius: 14px;
-      padding: 12px;
-      text-decoration: none;
-      color: inherit;
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(232, 97, 44, .18);
       box-shadow: var(--shadow);
-      transition: var(--trans);
-    }
-
-    .action:hover { transform: translateY(-3px); }
-    .action strong { display: block; margin-bottom: 4px; }
-    .action span { color: var(--muted); font-size: .86rem; }
-
-    .partner-panel {
-      background: var(--card);
-      border: 1px solid rgba(232, 91, 37, .2);
-      border-radius: var(--radius-xl);
       padding: 18px;
-      box-shadow: var(--shadow);
-    }
-
-    .partner-panel h3 { color: var(--muted); margin-bottom: 12px; }
-    .partners-grid { display: grid; gap: 10px; grid-template-columns: 1fr 1fr; }
-
-    .partner {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      border: 1px solid rgba(0,0,0,.08);
-      background: #fff;
-      border-radius: 12px;
-      min-height: 60px;
-      padding: 10px;
-      text-decoration: none;
-      color: inherit;
+      position: relative;
+      overflow: hidden;
       transition: var(--trans);
+      animation: lift 5s ease-in-out infinite;
     }
 
-    .partner:hover { transform: translateY(-2px); border-color: rgba(232, 91, 37, .32); }
+    .box:nth-child(2) { animation-delay: .4s; }
+    .box:nth-child(3) { animation-delay: .7s; }
+    .box:nth-child(4) { animation-delay: 1s; }
 
-    .dot {
-      width: 34px;
-      height: 34px;
-      border-radius: 10px;
+    .box::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, rgba(232,97,44,.08), transparent 42%);
+      pointer-events: none;
+    }
+
+    .box:hover { transform: translateY(-4px); }
+
+    .box .icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
       display: grid;
       place-items: center;
       color: #fff;
       font-weight: 800;
-      flex-shrink: 0;
+      margin-bottom: 10px;
+      background: linear-gradient(145deg, var(--primary), var(--accent));
     }
 
-    .z { background: linear-gradient(145deg, #ef4f5f, #d7263d); }
-    .s { background: linear-gradient(145deg, #fc8019, #e76f00); }
-    .u { background: linear-gradient(145deg, #262626, #3b3b3b); }
-    .d { background: linear-gradient(145deg, #ff3008, #d91d00); }
+    .box h3 { font-size: 1.07rem; margin-bottom: 8px; }
+    .box p { color: var(--muted); font-size: .9rem; line-height: 1.55; margin-bottom: 14px; }
 
-    .partner b { display: block; font-size: .92rem; }
-    .partner small { color: var(--muted); }
-
-    .signal-row {
-      margin: 20px 0;
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 12px;
-    }
-
-    .signal {
-      background: var(--card);
-      border: 1px solid rgba(232, 91, 37, .16);
-      border-radius: 14px;
-      padding: 12px;
-      box-shadow: var(--shadow);
-      animation: softPop 5s ease-in-out infinite;
-    }
-
-    .signal h4 { font-size: .95rem; margin-bottom: 6px; }
-    .signal p { font-size: .84rem; color: var(--muted); line-height: 1.45; }
-
-    .core-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 14px;
-      margin-bottom: 22px;
-    }
-
-    .card {
-      background: var(--card);
-      border: 1px solid rgba(232, 91, 37, .16);
-      border-radius: var(--radius-lg);
-      padding: 18px;
-      box-shadow: var(--shadow);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .card::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(110deg, rgba(232, 91, 37, .08), transparent 40%);
-      pointer-events: none;
-    }
-
-    .card h3 { margin-bottom: 7px; font-size: 1.05rem; }
-    .card p { color: var(--muted); line-height: 1.5; font-size: .9rem; margin-bottom: 12px; }
-    .card a, .card button {
-      text-decoration: none;
-      font-weight: 800;
-      color: var(--primary-dark);
+    .box a,
+    .box button {
       border: none;
       background: none;
-      padding: 0;
+      text-decoration: none;
+      color: var(--primary-dark);
+      font-weight: 800;
       cursor: pointer;
+      padding: 0;
     }
 
-    .help-wrap {
-      margin-bottom: 70px;
-      display: grid;
-      grid-template-columns: 1.1fr .9fr;
-      gap: 14px;
-    }
-
-    .help-card, .faq-card {
-      background: #fff;
-      border: 1px solid rgba(232, 91, 37, .2);
-      border-radius: var(--radius-xl);
-      box-shadow: var(--shadow);
-      padding: 20px;
-    }
-
-    .help-list { list-style: none; display: grid; gap: 8px; color: var(--muted); }
-    .help-list li::before { content: "✔"; color: var(--leaf); margin-right: 8px; font-weight: 800; }
-
-    .quick-contact {
-      margin-top: 10px;
+    .partner-list {
+      margin-top: 6px;
       display: grid;
       gap: 8px;
     }
 
-    .quick-contact a {
-      color: var(--primary-dark);
+    .partner-item {
       text-decoration: none;
-      font-weight: 700;
+      color: inherit;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      border-radius: var(--radius-md);
+      padding: 8px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #fff;
+      transition: var(--trans);
     }
 
-    details {
-      border: 1px solid rgba(232, 91, 37, .15);
-      border-radius: 12px;
-      padding: 10px;
-      margin-top: 8px;
-      background: #fffaf3;
+    .partner-item:hover { border-color: rgba(232, 97, 44, .35); }
+    .partner-item span { color: var(--muted); font-size: .8rem; }
+
+    .support-strip {
+      margin: 10px 0 32px;
+      background: #fff7ee;
+      border: 1px dashed rgba(232, 97, 44, .35);
+      border-radius: 999px;
+      padding: 10px 14px;
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      justify-content: center;
+      color: var(--muted);
+      font-size: .9rem;
     }
 
-    summary { cursor: pointer; font-weight: 700; }
-    details p { color: var(--muted); margin-top: 8px; }
+    .support-strip a { color: var(--primary-dark); text-decoration: none; font-weight: 700; }
 
     .modal {
       position: fixed;
       inset: 0;
-      background: rgba(26, 10, 2, .62);
+      background: rgba(24, 9, 2, .62);
       display: none;
-      align-items: center;
       justify-content: center;
-      z-index: 90;
+      align-items: center;
+      z-index: 50;
       padding: 16px;
     }
+
     .modal.open { display: flex; }
 
-    .modal-box {
+    .modal-card {
       width: min(500px, 100%);
       background: #fff;
-      border-radius: 18px;
-      border: 1px solid rgba(232, 91, 37, .25);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(232, 97, 44, .24);
       box-shadow: var(--shadow);
       padding: 20px;
     }
 
-    .button {
+    .modal-card h3 { margin-bottom: 6px; }
+    .modal-card p { color: var(--muted); margin-bottom: 10px; }
+
+    .contact-links { display: grid; gap: 8px; }
+    .contact-links a { color: var(--primary-dark); text-decoration: none; font-weight: 700; }
+
+    .btn-close {
       margin-top: 12px;
-      padding: 9px 12px;
+      border: 1px solid rgba(232, 97, 44, .28);
+      background: #fff4e9;
       border-radius: 10px;
-      border: 1px solid rgba(232, 91, 37, .28);
-      background: #fff6ec;
-      color: var(--primary-dark);
+      padding: 8px 12px;
       font-weight: 700;
+      color: var(--primary-dark);
       cursor: pointer;
     }
     .modal-box h3 { margin-bottom: 8px; }
     .modal-box p { color: var(--muted); line-height: 1.55; margin-bottom: 10px; }
 
-    .sticky-mobile {
+    .mobile-bar {
       position: fixed;
       left: 50%;
       transform: translateX(-50%);
       bottom: 10px;
       width: min(96%, 560px);
-      background: rgba(255, 255, 255, .96);
-      border: 1px solid rgba(232, 91, 37, .2);
-      box-shadow: var(--shadow);
+      background: rgba(255, 255, 255, .97);
+      border: 1px solid rgba(232, 97, 44, .2);
       border-radius: 14px;
+      box-shadow: var(--shadow);
       padding: 8px;
       display: none;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 8px;
-      z-index: 80;
+      z-index: 45;
     }
 
-    .sticky-mobile a, .sticky-mobile button {
-      text-decoration: none;
+    .mobile-bar a,
+    .mobile-bar button {
       border: none;
-      background: #fff3e4;
+      text-decoration: none;
+      background: #fff2e5;
       border-radius: 10px;
+      padding: 9px 6px;
       color: var(--primary-dark);
       font-weight: 800;
-      font-size: .8rem;
-      padding: 10px 6px;
+      font-size: .78rem;
       text-align: center;
     }
 
     footer {
       text-align: center;
       color: var(--muted);
-      padding: 14px 0 96px;
+      padding: 8px 0 96px;
       font-size: .88rem;
     }
 
     @media (max-width: 1100px) {
-      .signal-row, .core-grid { grid-template-columns: 1fr 1fr; }
+      .box-grid { grid-template-columns: 1fr 1fr; }
     }
 
-    @media (max-width: 900px) {
-      .hero, .help-wrap { grid-template-columns: 1fr; }
-    }
-
-    @media (max-width: 640px) {
-      .partners-grid, .signal-row, .core-grid, .quick-actions { grid-template-columns: 1fr; }
+    @media (max-width: 700px) {
+      .box-grid { grid-template-columns: 1fr; }
       .nav { justify-content: center; }
       .brand { width: 100%; justify-content: center; }
       .nav-links { justify-content: center; }
-      .sticky-mobile { display: grid; }
+      .mobile-bar { display: grid; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -422,8 +353,8 @@
   </style>
 </head>
 <body>
-  <div class="bg-pattern" aria-hidden="true"></div>
-  <div class="bg-orb" aria-hidden="true"></div>
+  <div class="pattern" aria-hidden="true"></div>
+  <div class="orb" aria-hidden="true"></div>
 
   <header class="header">
     <div class="container nav">
@@ -431,150 +362,103 @@
         <img src="assets/koumatha-logo.svg" alt="Koumatha Cloud Home Kitchen logo" />
         <div>
           <h1>Koumatha Cloud Kitchen</h1>
-          <small>Instant access food dashboard</small>
+          <small>Fast access for students, offices & families</small>
         </div>
       </a>
       <nav class="nav-links" aria-label="Main navigation">
         <a href="#partners">Partners</a>
         <a href="#weekly">Weekly</a>
         <a href="#daily">Daily</a>
-        <a href="#party">Party/Family</a>
-        <a href="#help">Help</a>
+        <a href="#bulk">Bulk Orders</a>
       </nav>
     </div>
   </header>
 
   <main id="home" class="container">
     <section class="hero" aria-labelledby="hero-title">
-      <div>
-        <div class="pill">✨ Redesigned: faster, clearer, animated</div>
-        <h2 id="hero-title">Everything customer needs <span>immediately</span>.</h2>
-        <p>
-          Quick access blocks, bright readable UI, stronger mobile experience, and one-tap routes to menus, partner apps,
-          party orders, and urgent support contacts.
-        </p>
-        <div class="quick-actions" aria-label="Immediate access shortcuts">
-          <a class="action" href="#weekly"><strong>Weekly Menu</strong><span>See this week in one tap</span></a>
-          <a class="action" href="#daily"><strong>Daily Menu</strong><span>Today specials & fresh meals</span></a>
-          <a class="action" href="party-family-order.html"><strong>Party Booking</strong><span>Function order page</span></a>
-          <button class="action" type="button" id="openHelpTop"><strong>Need Help Now?</strong><span>Call, email, WhatsApp</span></button>
-        </div>
-      </aside>
+      <div class="hero-badge">✨ Professional food UI/UX redesign</div>
+      <h2 id="hero-title">4 main boxes for <span>easy customer access</span></h2>
+      <p>
+        First: partners, second: weekly menus for offices/college/PG students, third: daily menus for offices/college/PG students,
+        fourth: family party and birthday bulk orders. Everything is fast and easy to reach.
+      </p>
     </section>
 
-    <section class="ticker" aria-label="Live offers">
-      <div class="ticker-track">
-        🔥 Free delivery on first order • 🥗 Healthy combo discounts • 🍕 Weekend family packs • ☕ Breakfast 20% off • 🎉 Party catering specials • 🔥 Free delivery on first order •
-      </div>
-      <aside class="partner-panel" id="partners">
-        <h3>Food Partner Channels</h3>
-        <div class="partners-grid">
-          <a class="partner" href="https://www.zomato.com" target="_blank" rel="noreferrer noopener"><span class="dot z">Z</span><span><b>Zomato</b><small>Order now</small></span></a>
-          <a class="partner" href="https://www.swiggy.com" target="_blank" rel="noreferrer noopener"><span class="dot s">S</span><span><b>Swiggy</b><small>Fast delivery</small></span></a>
-          <a class="partner" href="https://www.ubereats.com" target="_blank" rel="noreferrer noopener"><span class="dot u">U</span><span><b>Uber Eats</b><small>Live tracking</small></span></a>
-          <a class="partner" href="https://www.doordash.com" target="_blank" rel="noreferrer noopener"><span class="dot d">D</span><span><b>DoorDash</b><small>Express orders</small></span></a>
-        </div>
-      </aside>
-    </section>
-
-    <section class="signal-row" aria-label="Service highlights">
-      <article class="signal"><h4>⚡ One-Tap Order Flow</h4><p>No clutter, direct links to top tasks customers ask first.</p></article>
-      <article class="signal"><h4>📞 Instant Support</h4><p>Call and WhatsApp routes are exposed in visible action cards.</p></article>
-      <article class="signal"><h4>🎉 Event Catering</h4><p>Dedicated family and party page for bulk bookings.</p></article>
-      <article class="signal"><h4>📱 Mobile Friendly</h4><p>Sticky mobile action bar helps users access key tasks quickly.</p></article>
-    </section>
-
-    <section class="core-grid" aria-label="Core links">
-      <article class="card" id="weekly">
-        <h3>Weekly Menus</h3>
-        <p>Plan full-week breakfast/lunch/dinner with chef combo selections.</p>
-        <a href="#">Open weekly menu →</a>
-      </article>
-      <article class="card" id="daily">
-        <h3>Daily Menus</h3>
-        <p>Fresh daily menu with categories and fast order entry points.</p>
-        <a href="#">Open daily menu →</a>
-      </article>
-      <article class="card" id="party">
-        <h3>Party & Family Function</h3>
-        <p>Custom bulk meal packages for birthdays, pooja, office, and events.</p>
-        <a href="party-family-order.html">Open party/family order page →</a>
-      </article>
-      <article class="card" id="help">
-        <h3>Help App</h3>
-        <p>Users can instantly contact support if anything is unclear.</p>
-        <button type="button" id="openHelpCard">Open help contacts →</button>
-      </article>
-    </section>
-
-    <section class="help-wrap">
-      <article class="help-card">
-        <h3>Customer Help Center</h3>
-        <ul class="help-list" style="margin-top: 10px;">
-          <li>Track order, delay, cancel, and refund in one place.</li>
-          <li>App login and payment error guidance.</li>
-          <li>Escalation contact for urgent delivery problems.</li>
-          <li>Support response channels active every day.</li>
-        </ul>
-        <div class="quick-contact">
-          <a href="tel:+919876543210">📞 Help Line: +91 98765 43210</a>
-          <a href="mailto:support@koumathafoods.com">✉ support@koumathafoods.com</a>
-          <a href="https://wa.me/919876543210" target="_blank" rel="noreferrer noopener">💬 WhatsApp Support</a>
+    <section class="box-grid" aria-label="Main quick boxes">
+      <article class="box" id="partners">
+        <div class="icon">🍽</div>
+        <h3>1) Food Partners</h3>
+        <p>Direct delivery partner links for instant order placement.</p>
+        <div class="partner-list">
+          <a class="partner-item" href="https://www.zomato.com" target="_blank" rel="noreferrer noopener"><b>Zomato</b><span>Order Now</span></a>
+          <a class="partner-item" href="https://www.swiggy.com" target="_blank" rel="noreferrer noopener"><b>Swiggy</b><span>Fast Delivery</span></a>
+          <a class="partner-item" href="https://www.ubereats.com" target="_blank" rel="noreferrer noopener"><b>Uber Eats</b><span>Track Live</span></a>
         </div>
       </article>
-      <article class="faq-card">
-        <h3>Quick FAQ</h3>
-        <details open>
-          <summary>How can I place urgent order?</summary>
-          <p>Use Daily Menu or partner app cards above; these are fastest routes.</p>
-        </details>
-        <details>
-          <summary>How do I book party/family order?</summary>
-          <p>Open Party & Family card to go to event booking page and call event numbers.</p>
-        </details>
-        <details>
-          <summary>How to contact help immediately?</summary>
-          <p>Tap any "Open help contacts" button to launch support modal instantly.</p>
-        </details>
+
+      <article class="box" id="weekly">
+        <div class="icon">📅</div>
+        <h3>2) Weekly Menu (Office / College / PG)</h3>
+        <p>Weekly meal plan packages specially designed for office teams, college students and PG residents.</p>
+        <a href="#">Open weekly menu plans →</a>
+      </article>
+
+      <article class="box" id="daily">
+        <div class="icon">🍱</div>
+        <h3>3) Daily Menu (Office / College / PG)</h3>
+        <p>Daily fresh menu for office lunch, college meals and PG daily tiffin requirements.</p>
+        <a href="#">Open daily menu list →</a>
+      </article>
+
+      <article class="box" id="bulk">
+        <div class="icon">🎉</div>
+        <h3>4) Family Party & Birthday Bulk Orders</h3>
+        <p>Bulk catering for birthday celebrations, family functions and gatherings with custom packages.</p>
+        <a href="party-family-order.html">Open family & party bulk order page →</a>
+        <button type="button" id="openHelp" style="display:block;margin-top:8px;">Need quick help? Call now →</button>
       </article>
     </section>
+
+    <div class="support-strip" aria-label="Quick contact strip">
+      <span>Need immediate support?</span>
+      <a href="tel:+919876543210">📞 +91 98765 43210</a>
+      <a href="mailto:support@koumathafoods.com">✉ support@koumathafoods.com</a>
+      <a href="https://wa.me/919876543210" target="_blank" rel="noreferrer noopener">💬 WhatsApp</a>
+    </div>
   </main>
 
-  <div class="modal" id="helpModal" aria-hidden="true" role="dialog" aria-labelledby="helpModalTitle">
-    <div class="modal-box">
-      <h3 id="helpModalTitle">Immediate Help Contacts</h3>
-      <p style="color: var(--muted); margin-top: 8px;">Choose how you want support right now:</p>
-      <div class="quick-contact">
+  <div class="modal" id="helpModal" aria-hidden="true" role="dialog" aria-labelledby="helpTitle">
+    <div class="modal-card">
+      <h3 id="helpTitle">Immediate Help Contacts</h3>
+      <p>Choose your support channel:</p>
+      <div class="contact-links">
         <a href="tel:+919876543210">📞 Call +91 98765 43210</a>
         <a href="tel:+919812345678">📞 Call +91 98123 45678</a>
         <a href="mailto:support@koumathafoods.com">✉ support@koumathafoods.com</a>
         <a href="https://wa.me/919876543210" target="_blank" rel="noreferrer noopener">💬 Start WhatsApp chat</a>
       </div>
-      <button class="button" id="closeHelpModal" type="button">Close</button>
+      <button class="btn-close" id="closeHelp" type="button">Close</button>
     </div>
   </div>
 
-  <div class="sticky-mobile" aria-label="Mobile quick actions">
+  <div class="mobile-bar" aria-label="Mobile quick actions">
+    <a href="#partners">Partners</a>
+    <a href="#weekly">Weekly</a>
     <a href="#daily">Daily</a>
-    <a href="party-family-order.html">Party</a>
-    <button id="openHelpSticky" type="button">Help</button>
+    <button id="openHelpMobile" type="button">Help</button>
   </div>
 
   <footer>
-    © 2026 Koumatha Cloud Kitchen • Animated, responsive and instant-access food website.
+    © 2026 Koumatha Cloud Kitchen • Attractive animated UI and easy 4-box customer journey.
   </footer>
 
   <script>
     const helpModal = document.getElementById('helpModal');
-    const openers = [
-      document.getElementById('openHelpTop'),
-      document.getElementById('openHelpCard'),
-      document.getElementById('openHelpSticky')
-    ];
-    const closeBtn = document.getElementById('closeHelpModal');
+    const openHelp = document.getElementById('openHelp');
+    const openHelpMobile = document.getElementById('openHelpMobile');
+    const closeHelp = document.getElementById('closeHelp');
 
-    function openModal(event) {
-      if (event) event.preventDefault();
+    function openModal() {
       helpModal.classList.add('open');
       helpModal.setAttribute('aria-hidden', 'false');
     }
@@ -584,17 +468,13 @@
       helpModal.setAttribute('aria-hidden', 'true');
     }
 
-    openers.forEach((item) => {
-      if (item) item.addEventListener('click', openModal);
+    if (openHelp) openHelp.addEventListener('click', openModal);
+    if (openHelpMobile) openHelpMobile.addEventListener('click', openModal);
+    if (closeHelp) closeHelp.addEventListener('click', closeModal);
+
+    helpModal.addEventListener('click', (event) => {
+      if (event.target === helpModal) closeModal();
     });
-
-    if (closeBtn) closeBtn.addEventListener('click', closeModal);
-
-    if (helpModal) {
-      helpModal.addEventListener('click', (event) => {
-        if (event.target === helpModal) closeModal();
-      });
-    }
   </script>
 </body>
 </html>
